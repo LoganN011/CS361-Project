@@ -16,6 +16,7 @@ public class Queue {
     public boolean isFull() {
         return (this.size == this.capacity);
     }
+
     public boolean isEmpty() {
         return (this.size == 0);
     }
@@ -40,15 +41,14 @@ public class Queue {
         return item;
     }
 
-    public int front()
-    {
+    public int front() {
         if (this.isEmpty()) {
             return Integer.MIN_VALUE;
         }
         return this.array[this.front];
     }
-    public int rear()
-    {
+
+    public int rear() {
         if (this.isEmpty()) {
             return Integer.MIN_VALUE;
         }
