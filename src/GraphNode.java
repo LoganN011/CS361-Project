@@ -1,4 +1,6 @@
 public class GraphNode {
+    //Ask about if we can represent the graph as a matrix(2d array) because
+    // that would make everything easier
     private int seen;
     private int row;
     private int col;
@@ -11,6 +13,7 @@ public class GraphNode {
     private GraphNode right;
 
     public GraphNode(int row, int col, String label, boolean hasItem) {
+        //Maybe add a previous node for the searching?
         this.row = row;
         this.col = col;
         this.label = label;
