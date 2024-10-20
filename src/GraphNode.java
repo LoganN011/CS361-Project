@@ -14,6 +14,8 @@ public class GraphNode {
 
     public GraphNode(int row, int col, String label, boolean hasItem) {
         //Maybe add a previous node for the searching?
+        //Will also need a distance
+        //Will need other stuff based the type of searching
         this.row = row;
         this.col = col;
         this.label = label;
