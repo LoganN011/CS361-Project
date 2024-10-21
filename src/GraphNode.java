@@ -1,16 +1,14 @@
 public class GraphNode {
-    //Ask about if we can represent the graph as a matrix(2d array) because
-    // that would make everything easier
+    //She recommends that we use a 2d array to represent the grid and
+    // just use that to look at the nodes next to each one
+    //https://www.geeksforgeeks.org/graph-adjacency-matrix-in-java/
+    //https://youcademy.org/graph-breadth-first-search/
     private int seen;
     private int row;
     private int col;
     //Do we want a label for each node??
     private String label;
     private boolean hasItem;
-    private GraphNode up;
-    private GraphNode down;
-    private GraphNode left;
-    private GraphNode right;
 
     public GraphNode(int row, int col, String label, boolean hasItem) {
         //Maybe add a previous node for the searching?
@@ -32,22 +30,6 @@ public class GraphNode {
 
     public int getCol() {
         return col;
-    }
-
-    public GraphNode up() {
-        return up;
-    }
-
-    public GraphNode down() {
-        return down;
-    }
-
-    public GraphNode left() {
-        return left;
-    }
-
-    public GraphNode right() {
-        return right;
     }
 
     public boolean hasItem() {
