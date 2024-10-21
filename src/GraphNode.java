@@ -1,6 +1,7 @@
 public class GraphNode {
     //Ask about if we can represent the graph as a matrix(2d array) because
     // that would make everything easier
+    //https://www.geeksforgeeks.org/graph-adjacency-matrix-in-java/
     private int seen;
     private int row;
     private int col;
