@@ -9,9 +9,10 @@ public class GraphNode {
     //Do we want a label for each node??
     private String label;
     private boolean hasItem;
+    private GraphNode previous;
+    private int distance;
 
     public GraphNode(int row, int col, String label, boolean hasItem) {
-        //Maybe add a previous node for the searching?
         //Will also need a distance
         //Will need other stuff based the type of searching
         this.row = row;
@@ -34,6 +35,34 @@ public class GraphNode {
 
     public boolean hasItem() {
         return hasItem;
+    }
+
+    public boolean isDiscovered() {
+        return seen == 0;
+    }
+
+    public boolean isSeen() {
+        return seen == 1;
+    }
+
+    public boolean isExplored() {
+        return seen == 2;
+    }
+
+    public void incrementSeen() {
+        seen++;
+    }
+
+    public void setPrevious(GraphNode previous) {
+        this.previous = previous;
+    }
+
+    public GraphNode getPrevious() {
+        return previous;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
     }
 
 }
