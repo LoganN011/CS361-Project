@@ -1,6 +1,6 @@
-public class Queue {
+public class Queue<T> {
     //https://www.geeksforgeeks.org/queue-linked-list-implementation/
-    private Node front, rear;
+    private Node<T> front, rear;
 
     public Queue() {
         front = rear = null;
@@ -10,8 +10,8 @@ public class Queue {
         return front == null && rear == null;
     }
 
-    public void enqueue(int newData) {
-        Node newNode = new Node(newData);
+    public void enqueue(T newData) {
+        Node<T> newNode = new Node(newData);
         if (rear == null) {
             front = rear = newNode;
         } else {
@@ -20,11 +20,11 @@ public class Queue {
         }
     }
 
-    public int dequeue() {
+    public T dequeue() {
         if (isEmpty()) {
             System.out.println("Broken");
         }
-        Node temp = front;
+        Node<T> temp = front;
         front = front.next();
         if (front == null) {
             rear = null;
@@ -33,14 +33,14 @@ public class Queue {
     }
 
     //Maybe make these last two return the node and not the data
-    public int front() {
+    public T front() {
         if (isEmpty()) {
             System.out.println("Broken");
         }
         return front.data();
     }
 
-    public int rear() {
+    public T rear() {
         if (isEmpty()) {
             System.out.println("Broken");
         }

@@ -1,13 +1,13 @@
-public class Node {
-    private int data;
+public class Node<T> {
+    private T data;
     private Node next;
 
-    public Node(int data) {
+    public Node(T data) {
         this.data = data;
         this.next = null;
     }
 
-    public int data() {
+    public T data() {
         return this.data;
     }
 

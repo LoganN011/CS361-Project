@@ -25,6 +25,11 @@ public class GraphNode {
         seen = 0;
     }
 
+    public String toString() {
+
+        return "[" + row + "," + col + "]";
+    }
+
     public int getRow() {
         return row;
     }
