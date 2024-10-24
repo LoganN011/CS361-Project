@@ -27,7 +27,7 @@ public class GraphNode {
 
     public String toString() {
 
-        return "[" + row + "," + col + "]";
+        return "[" + row + "," + col + "],Dist=" + distance;
     }
 
     public int getRow() {
@@ -68,6 +68,10 @@ public class GraphNode {
 
     public void setDistance(int distance) {
         this.distance = distance;
+    }
+
+    public int getDistance() {
+        return distance;
     }
 
 }
