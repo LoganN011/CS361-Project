@@ -74,4 +74,17 @@ public class GraphNode {
         return distance;
     }
 
+    public static boolean isValid(GraphNode[][] matrix, int row, int col) {
+        return row >= 0 && row < matrix.length && col >= 0 && col < matrix[0].length;
+    }
+
+    public static void printPath(GraphNode current) {
+        String output = "";
+        while (current != null) {
+            output = "[" + current.getRow() + "," + current.getCol() + "] " + output;
+            current = current.previous;
+        }
+        System.out.println(output);
+    }
+
 }

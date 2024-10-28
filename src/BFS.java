@@ -16,9 +16,10 @@ public class BFS {
                 //bfs from here and delete the item in that spot. and reset the
                 //queue maybe Idk lol
                 System.out.println(node);
+                GraphNode.printPath(matrix[row][col]);
             }
             for (int k = 0; k < 4; k++) {
-                if (isValid(matrix, row + rowMove[k], col + colMove[k])) {
+                if (GraphNode.isValid(matrix, row + rowMove[k], col + colMove[k])) {
                     if (matrix[row + rowMove[k]][col + colMove[k]] != null && matrix[row + rowMove[k]][col + colMove[k]].isDiscovered()) {
                         matrix[row + rowMove[k]][col + colMove[k]].incrementSeen();
                         matrix[row + rowMove[k]][col + colMove[k]].setDistance(matrix[row][col].getDistance() + 1);
@@ -32,7 +33,5 @@ public class BFS {
         }
     }
 
-    public static boolean isValid(GraphNode[][] matrix, int row, int col) {
-        return row >= 0 && row < matrix.length && col >= 0 && col < matrix[0].length;
-    }
+
 }

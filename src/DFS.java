@@ -19,11 +19,13 @@ public class DFS {
         matrix[row][col].setDistance(dis++);
         if (matrix[row][col].hasItem()) {
             System.out.println(matrix[row][col]);
+            GraphNode.printPath(matrix[row][col]);
         }
         matrix[row][col].incrementSeen();
         for (int k = 0; k < 4; k++) {
-            if (BFS.isValid(matrix, row + rowMove[k], col + colMove[k])) {
+            if (GraphNode.isValid(matrix, row + rowMove[k], col + colMove[k])) {
                 if (matrix[row + rowMove[k]][col + colMove[k]].isDiscovered()) {
+                    matrix[row + rowMove[k]][col + colMove[k]].setPrevious(matrix[row][col]);
                     dfs(matrix, row + rowMove[k], col + colMove[k]);
                 }
             }
