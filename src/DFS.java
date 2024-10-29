@@ -16,10 +16,16 @@ public class DFS {
         //finding the shortest path. Or if that is the requirement im not sure
 
         //I want to know if we are supposed to find the same path for all methods???
+        GraphNode[][] original = GraphNode.copyMatrix(matrix);
         matrix[row][col].setDistance(dis++);
         if (matrix[row][col].hasItem()) {
+            //The first n number of calls is right but the distance is wrong so
+            //might pass that is as a parameter to the method
             System.out.println(matrix[row][col]);
             GraphNode.printPath(matrix[row][col]);
+            original[row][col].incrementSeen();
+            original[row][col].removeItem();
+            dfs(original, row, col);
         }
         matrix[row][col].incrementSeen();
         for (int k = 0; k < 4; k++) {

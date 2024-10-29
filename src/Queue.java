@@ -46,6 +46,10 @@ public class Queue<T> {
         }
         return rear.data();
     }
+
+    public void clear() {
+        front = rear = null;
+    }
     //https://www.geeksforgeeks.org/introduction-and-array-implementation-of-queue/
 //    private int front;
 //    private int rear;

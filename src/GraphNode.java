@@ -42,6 +42,10 @@ public class GraphNode {
         return hasItem;
     }
 
+    public void removeItem() {
+        hasItem = false;
+    }
+
     public boolean isDiscovered() {
         return seen == 0;
     }
@@ -76,6 +80,16 @@ public class GraphNode {
 
     public static boolean isValid(GraphNode[][] matrix, int row, int col) {
         return row >= 0 && row < matrix.length && col >= 0 && col < matrix[0].length;
+    }
+
+    public static GraphNode[][] copyMatrix(GraphNode[][] matrix) {
+        GraphNode[][] newMatrix = new GraphNode[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                newMatrix[i][j] = new GraphNode(i, j, "LABEL??", matrix[i][j].hasItem());
+            }
+        }
+        return newMatrix;
     }
 
     public static void printPath(GraphNode current) {

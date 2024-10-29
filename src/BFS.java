@@ -4,9 +4,11 @@ public class BFS {
     public static int[] colMove = {0, 0, 1, -1};
 
     public static void bfs(GraphNode[][] matrix, int row, int col) {
+        GraphNode[][] original = GraphNode.copyMatrix(matrix);
         matrix[row][col].incrementSeen();
         matrix[row][col].setDistance(0);
         test.enqueue(matrix[row][col]);
+
         while (!test.isEmpty()) {
             GraphNode node = test.dequeue();
             row = node.getRow();
@@ -17,6 +19,12 @@ public class BFS {
                 //queue maybe Idk lol
                 System.out.println(node);
                 GraphNode.printPath(matrix[row][col]);
+                original[row][col].incrementSeen();
+                original[row][col].removeItem();
+                test.clear();
+                bfs(original, row, col);
+                //This finds the path that I want but also like a bunch of diffrent ones
+                //The longest path is the one that finds all of the items
             }
             for (int k = 0; k < 4; k++) {
                 if (GraphNode.isValid(matrix, row + rowMove[k], col + colMove[k])) {
