@@ -86,7 +86,12 @@ public class GraphNode {
         GraphNode[][] newMatrix = new GraphNode[matrix.length][matrix[0].length];
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
-                newMatrix[i][j] = new GraphNode(i, j, "LABEL??", matrix[i][j].hasItem());
+                if (matrix[i][j] != null) {
+                    newMatrix[i][j] = new GraphNode(i, j, "LABEL??", matrix[i][j].hasItem());
+                } else {
+                    newMatrix[i][j] = null;
+                }
+
             }
         }
         return newMatrix;

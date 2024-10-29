@@ -4,7 +4,7 @@ public class BFS {
     public static int[] colMove = {0, 0, 1, -1};
     private static GraphNode[][] original;
     public static void bfs(GraphNode[][] matrix, int row, int col) {
-        FileIO.printGraph(matrix);
+        //FileIO.printGraph(matrix);
         original = GraphNode.copyMatrix(matrix);
         matrix[row][col].incrementSeen();
         matrix[row][col].setDistance(0);
