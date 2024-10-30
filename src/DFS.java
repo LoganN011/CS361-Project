@@ -8,10 +8,9 @@ public class DFS {
      */
     public static int[] rowMove = {1, -1, 0, 0};
     public static int[] colMove = {0, 0, 1, -1};
-//    public static int[] rowMove = { 0, 1,0,-1};
-//    public static int[] colMove = {1,0,-1, 0, };
 
     public static String path = "";
+    public static int totalDistance = 0;
     private static GraphNode[][] original;
 
     public static void dfs(GraphNode[][] matrix, int row, int col, int distance, boolean isFirst) {
@@ -32,6 +31,7 @@ public class DFS {
             //Also need something to sum the distance of the nodes but that should be easy
             path = GraphNode.getStringPath(matrix[row][col]);
             original[row][col].removeItem();
+            totalDistance += distance;
             dfs(original, row, col, 0, false);
         }
         matrix[row][col].incrementSeen();
@@ -43,6 +43,11 @@ public class DFS {
                 }
             }
         }
+    }
 
+    public static void printInfo(GraphNode[][] matrix, int row, int col, int distance, boolean isFirst) {
+        dfs(matrix, row, col, distance, isFirst);
+        System.out.println(path);
+        System.out.println(totalDistance);
     }
 }

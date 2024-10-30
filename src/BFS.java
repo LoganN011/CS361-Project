@@ -2,10 +2,15 @@ public class BFS {
     public static Queue<GraphNode> test = new Queue();
     public static int[] rowMove = {1, -1, 0, 0};
     public static int[] colMove = {0, 0, 1, -1};
+    public static String path = "";
+    public static int totalDistance = 0;
     private static GraphNode[][] original;
-    public static void bfs(GraphNode[][] matrix, int row, int col) {
+
+    public static void bfs(GraphNode[][] matrix, int row, int col, boolean isFirst) {
         //FileIO.printGraph(matrix);
-        original = GraphNode.copyMatrix(matrix);
+        if (isFirst) {
+            original = GraphNode.copyMatrix(matrix);
+        }
         matrix[row][col].incrementSeen();
         matrix[row][col].setDistance(0);
         test.enqueue(matrix[row][col]);
@@ -20,13 +25,15 @@ public class BFS {
                 //My guess for finding the shortest path is that we will then call
                 //bfs from here and delete the item in that spot. and reset the
                 //queue maybe Idk lol
-                System.out.println(node);
-                GraphNode.printPath(matrix[row][col]);
+                // System.out.println(node);
+                //GraphNode.printPath(matrix[row][col]);
 
-                original[row][col].incrementSeen();
+                //original[row][col].incrementSeen();
                 original[row][col].removeItem();
                 test.clear();
-                bfs(original, row, col);
+                path = GraphNode.getStringPath(matrix[row][col]);
+                totalDistance += matrix[row][col].getDistance();
+                bfs(original, row, col, false);
                 //This finds the path that I want but also like a bunch of diffrent ones
                 //The longest path is the one that finds all of the items
             }
@@ -43,6 +50,14 @@ public class BFS {
 
             node.incrementSeen();
         }
+
+    }
+
+    public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst) {
+        totalDistance = 0;
+        bfs(matrix, row, col, isFirst);
+        System.out.println(path);
+        System.out.println(totalDistance);
     }
 
 
