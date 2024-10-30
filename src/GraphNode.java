@@ -12,6 +12,16 @@ public class GraphNode {
     private GraphNode previous;
     private int distance;
 
+    /**
+     *
+     * @param row
+     * @param col
+     * @param label
+     * @param hasItem
+     *
+     * might be useful to add a graph row and col size
+     */
+
     public GraphNode(int row, int col, String label, boolean hasItem) {
         //Will also need a distance
         //Will need other stuff based the type of searching
@@ -73,6 +83,49 @@ public class GraphNode {
     public void setDistance(int distance) {
         this.distance = distance;
     }
+
+    /**
+     * I am thinking to add some sort of directional values for up, down, left,
+     * and right
+     * i think it might be beneficial so i will write out what I had in mind but
+     * I am just not sure on the best approach for it, so I will need some input
+     *
+     * also, we might want there to be some sort of static value for the total
+     * row and col size ???
+    public void setLeft(){
+
+    }
+    public int getLeft(){
+        return 1;
+    }
+    public void setRight(){
+
+    }
+    public int getRight(){
+        return 1;
+    }
+    public void setUp(){
+
+    }
+    public int getUp(){
+        return 1;
+    }
+    public void setDown(){
+
+    }
+    public int getDown(){
+        return 1;
+    }
+
+    public boolean isMoveLegal(int row, int col ) {
+        if(row < 0 || row > some sort of val for graph [][] rows || then same thing for cols ){
+             return true;
+        }
+        return false;
+    }
+
+     */
+
 
     public int getDistance() {
         return distance;
