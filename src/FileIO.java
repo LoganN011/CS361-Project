@@ -48,6 +48,8 @@ public class FileIO {
         GraphNode[][] matrix = buildGraph();
         printGraph(matrix);
 //        BFS.bfs(matrix, 0, 0);
-        DFS.dfs(matrix, 0, 0);
+        DFS.dfs(matrix, 0, 0, 0, true);
+        System.out.println(DFS.path);
+
     }
 }

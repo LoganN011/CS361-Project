@@ -159,4 +159,13 @@ public class GraphNode {
         System.out.println(output);
     }
 
+    public static String getStringPath(GraphNode current) {
+        String output = "";
+        while (current != null) {
+            output = "[" + current.getRow() + "," + current.getCol() + "] " + output;
+            current = current.previous;
+        }
+        return output;
+    }
+
 }

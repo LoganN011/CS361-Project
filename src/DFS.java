@@ -8,32 +8,38 @@ public class DFS {
      */
     public static int[] rowMove = {1, -1, 0, 0};
     public static int[] colMove = {0, 0, 1, -1};
-    public static int dis = 0;
+//    public static int[] rowMove = { 0, 1,0,-1};
+//    public static int[] colMove = {1,0,-1, 0, };
+
+    public static String path = "";
     private static GraphNode[][] original;
 
-    public static void dfs(GraphNode[][] matrix, int row, int col) {
+    public static void dfs(GraphNode[][] matrix, int row, int col, int distance, boolean isFirst) {
         //This finds all of the items not the shortest path because that is not
         //what dfs does so I am confused how I would update it to work with
         //finding the shortest path. Or if that is the requirement im not sure
 
         //I want to know if we are supposed to find the same path for all methods???
-        original = GraphNode.copyMatrix(matrix);
-        matrix[row][col].setDistance(dis++);
+        if (isFirst) {
+            original = GraphNode.copyMatrix(matrix);
+        }
+        matrix[row][col].setDistance(distance);
         if (original[row][col].hasItem()) {
-            //The first n number of calls is right but the distance is wrong so
-            //might pass that is as a parameter to the method
-            System.out.println(matrix[row][col]);
-            GraphNode.printPath(matrix[row][col]);
-            original[row][col].incrementSeen();
+            //System.out.println(matrix[row][col]);
+            //GraphNode.printPath(matrix[row][col]);
+            //Saves the last path found as the whole path of the searching
+            //Working but not a short path
+            //Also need something to sum the distance of the nodes but that should be easy
+            path = GraphNode.getStringPath(matrix[row][col]);
             original[row][col].removeItem();
-            dfs(original, row, col);
+            dfs(original, row, col, 0, false);
         }
         matrix[row][col].incrementSeen();
         for (int k = 0; k < 4; k++) {
             if (GraphNode.isValid(matrix, row + rowMove[k], col + colMove[k])) {
                 if (matrix[row + rowMove[k]][col + colMove[k]].isDiscovered()) {
                     matrix[row + rowMove[k]][col + colMove[k]].setPrevious(matrix[row][col]);
-                    dfs(matrix, row + rowMove[k], col + colMove[k]);
+                    dfs(matrix, row + rowMove[k], col + colMove[k], distance + 1, false);
                 }
             }
         }
