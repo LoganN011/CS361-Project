@@ -47,7 +47,7 @@ public class FileIO {
     public static void main(String[] args) {
         GraphNode[][] matrix = buildGraph();
         printGraph(matrix);
-        BFS.printInfo(matrix, 0, 0, true);
+//        BFS.printInfo(matrix, 0, 0, true);
         DFS.printInfo(matrix, 0, 0, 0, true);
 
     }

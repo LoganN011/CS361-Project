@@ -26,14 +26,14 @@ public class BFS {
                 //bfs from here and delete the item in that spot. and reset the
                 //queue maybe Idk lol
                 // System.out.println(node);
-                //GraphNode.printPath(matrix[row][col]);
+                GraphNode.printPath(matrix[row][col]);
 
                 //original[row][col].incrementSeen();
                 original[row][col].removeItem();
                 test.clear();
                 path = GraphNode.getStringPath(matrix[row][col]);
                 totalDistance += matrix[row][col].getDistance();
-                bfs(original, row, col, false);
+                bfs(GraphNode.copyMatrix(original), row, col, false);
                 //This finds the path that I want but also like a bunch of diffrent ones
                 //The longest path is the one that finds all of the items
             }
