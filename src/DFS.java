@@ -25,14 +25,14 @@ public class DFS {
         matrix[row][col].setDistance(distance);
         if (original[row][col].hasItem()) {
             //System.out.println(matrix[row][col]);
-            //GraphNode.printPath(matrix[row][col]);
+            GraphNode.printPath(matrix[row][col]);
             //Saves the last path found as the whole path of the searching
             //Working but not a short path
             //Also need something to sum the distance of the nodes but that should be easy
             path = GraphNode.getStringPath(matrix[row][col]);
             original[row][col].removeItem();
             totalDistance += distance;
-            dfs(original, row, col, 0, false);
+            dfs(GraphNode.copyMatrix(original), row, col, 0, false);
         }
         matrix[row][col].incrementSeen();
         for (int k = 0; k < 4; k++) {
