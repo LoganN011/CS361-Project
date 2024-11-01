@@ -9,6 +9,7 @@ public class BFS {
     public static void bfs(GraphNode[][] matrix, int row, int col, boolean isFirst) {
         //FileIO.printGraph(matrix);
         if (isFirst) {
+            path += "[" + matrix[row][col].getRow() + "," + matrix[row][col].getCol() + "] ";
             original = GraphNode.copyMatrix(matrix);
         }
         matrix[row][col].incrementSeen();
@@ -26,12 +27,12 @@ public class BFS {
                 //bfs from here and delete the item in that spot. and reset the
                 //queue maybe Idk lol
                 // System.out.println(node);
-                GraphNode.printPath(matrix[row][col]);
+                //GraphNode.printPath(matrix[row][col]);
 
                 //original[row][col].incrementSeen();
                 original[row][col].removeItem();
                 test.clear();
-                path = GraphNode.getStringPath(matrix[row][col]);
+                path += GraphNode.getStringPath(matrix[row][col]);
                 totalDistance += matrix[row][col].getDistance();
                 bfs(GraphNode.copyMatrix(original), row, col, false);
                 //This finds the path that I want but also like a bunch of diffrent ones
