@@ -151,12 +151,17 @@ public class GraphNode {
     }
 
     public static void printPath(GraphNode current) {
+        String output = getStringPath(current);
+        System.out.println(output);
+    }
+
+    public static String getStringPath(GraphNode current) {
         String output = "";
-        while (current != null) {
+        while (current.previous != null) {
             output = "[" + current.getRow() + "," + current.getCol() + "] " + output;
             current = current.previous;
         }
-        System.out.println(output);
+        return output;
     }
 
 }
