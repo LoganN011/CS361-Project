@@ -43,6 +43,7 @@ public class dijkstra {
                     distanceMatrix[i][j] = 0;
                 }
                 else{
+                    // mark on distance matrix that the edge weight has yet to be recorded
                     distanceMatrix[i][j] = -1;
                 }
             }
@@ -112,7 +113,7 @@ public class dijkstra {
                             System.out.println(neighbor);
                             System.out.println(node.getAdjacencyPlace());
                             System.out.println(neighbor.getAdjacencyPlace());
-                            distanceMatrix[node.getAdjacencyPlace()][neighbor.getAdjacencyPlace()] = 3;
+                            distanceMatrix[node.getAdjacencyPlace()][neighbor.getAdjacencyPlace()] = node.getWeight();
 
                             // when item is reached, clear queue to
                             que.clear();

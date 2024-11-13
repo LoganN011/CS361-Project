@@ -29,9 +29,11 @@ public class FileIO {
                         matrix[i][j].setAdjacencyPlace(0);
                     }
                     matrix[i][j] = new GraphNode(i, j, "EMPTY", false);
-                } else if (line.charAt(j) == 'I') {
+                }
+                else if (line.charAt(j) == 'I') {
                     matrix[i][j] = new GraphNode(i, j, "ITEM", true);
                     matrix[i][j].setAdjacencyPlace(count);
+                    System.out.println(matrix[i][j].getAdjacencyPlace());
                     numOfItems++;
                     count ++;
                 }
