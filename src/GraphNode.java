@@ -171,6 +171,7 @@ public class GraphNode {
             for (int j = 0; j < matrix[0].length; j++) {
                 if (matrix[i][j] != null) {
                     newMatrix[i][j] = new GraphNode(i, j, "LABEL??", matrix[i][j].hasItem());
+                    newMatrix[i][j].setAdjacencyPlace(matrix[i][j].getAdjacencyPlace());
                 } else {
                     newMatrix[i][j] = null;
                 }

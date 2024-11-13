@@ -1,6 +1,4 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class dijkstra {
     /**
@@ -65,14 +63,14 @@ public class dijkstra {
     }
 
     public static void bfsWeights(GraphNode[][] matrix, GraphNode startNode, int startIndex, int numOfItems){
-        for (GraphNode[] row : matrix) { // iterate through rows of graphnodes
-            for (GraphNode node : row) { // iterate throguh each node in the row
-                if (node != null) {
-                    node.setWeight(0); // set weight to inf
-                    node.setSeen(0);  // set seen to 0
-                }
-            }
-        }
+//        for (GraphNode[] row : matrix) { // iterate through rows of graphnodes
+//            for (GraphNode node : row) { // iterate throguh each node in the row
+//                if (node != null) {
+//                    node.setWeight(0); // set weight to inf
+//                    node.setSeen(0);  // set seen to 0
+//                }
+//            }
+//        }
         startNode.setWeight(0);
         startNode.incrementSeen();
         que.enqueue(startNode);
