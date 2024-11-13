@@ -4,6 +4,7 @@ public class GraphNode {
     //https://www.geeksforgeeks.org/graph-adjacency-matrix-in-java/
     //https://youcademy.org/graph-breadth-first-search/
     private int seen;
+    private int weight;
     private int row;
     private int col;
     //Do we want a label for each node??
@@ -11,6 +12,7 @@ public class GraphNode {
     private boolean hasItem;
     private GraphNode previous;
     private int distance;
+    private int adjacencyPlace = 0;
 
     /**
      *
@@ -29,11 +31,20 @@ public class GraphNode {
         this.col = col;
         this.label = label;
         this.hasItem = hasItem;
+        weight = -1;
         //0 means not discovered
         //1 means seen
         //2 means explored
         seen = 0;
     }
+
+    public void setAdjacencyPlace(int x ){
+        adjacencyPlace = x;
+    }
+    public int getAdjacencyPlace(){
+        return adjacencyPlace;
+    }
+
 
     public String toString() {
 
@@ -60,6 +71,10 @@ public class GraphNode {
         return seen == 0;
     }
 
+    public void setSeen(int x){
+        seen = x;
+    }
+
     public boolean isSeen() {
         return seen == 1;
     }
@@ -71,6 +86,7 @@ public class GraphNode {
     public void incrementSeen() {
         seen++;
     }
+
 
     public void setPrevious(GraphNode previous) {
         this.previous = previous;
@@ -84,6 +100,20 @@ public class GraphNode {
         this.distance = distance;
     }
 
+    public void incrementWeight() {
+        weight++;
+    }
+    public void setWeight(int x){
+        weight = x;
+    }
+    public int getWeight(){
+        return weight;
+    }
+    public int getSeen(){
+        return seen;
+    }
+
+
     /**
      * I am thinking to add some sort of directional values for up, down, left,
      * and right
@@ -92,37 +122,37 @@ public class GraphNode {
      *
      * also, we might want there to be some sort of static value for the total
      * row and col size ???
-    public void setLeft(){
+     public void setLeft(){
 
-    }
-    public int getLeft(){
-        return 1;
-    }
-    public void setRight(){
+     }
+     public int getLeft(){
+     return 1;
+     }
+     public void setRight(){
 
-    }
-    public int getRight(){
-        return 1;
-    }
-    public void setUp(){
+     }
+     public int getRight(){
+     return 1;
+     }
+     public void setUp(){
 
-    }
-    public int getUp(){
-        return 1;
-    }
-    public void setDown(){
+     }
+     public int getUp(){
+     return 1;
+     }
+     public void setDown(){
 
-    }
-    public int getDown(){
-        return 1;
-    }
+     }
+     public int getDown(){
+     return 1;
+     }
 
-    public boolean isMoveLegal(int row, int col ) {
-        if(row < 0 || row > some sort of val for graph [][] rows || then same thing for cols ){
-             return true;
-        }
-        return false;
-    }
+     public boolean isMoveLegal(int row, int col ) {
+     if(row < 0 || row > some sort of val for graph [][] rows || then same thing for cols ){
+     return true;
+     }
+     return false;
+     }
 
      */
 
