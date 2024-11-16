@@ -67,12 +67,19 @@ public class FileIO {
         GraphNode[][] matrix = buildGraph();
         printGraph(matrix);
         GraphNode[][] bfs = GraphNode.copyMatrix(matrix);
+        System.out.println("BFS: ");
         startTimer();
         BFS.printInfo(bfs, 0, 0, true);
         stopTimer();
+        System.out.println("DFS: ");
         GraphNode[][] dfs = GraphNode.copyMatrix(matrix);
         startTimer();
         DFS.printInfo(dfs, 0, 0, 0, true);
+        stopTimer();
+        GraphNode[][] bell = GraphNode.copyMatrix(matrix);
+        System.out.println("Bellman-Ford: ");
+        startTimer();
+        BellmanFord.BellmanFord(bell, 0, 0, true);
         stopTimer();
 
     }

@@ -1,5 +1,5 @@
 public class BFS {
-    public static Queue<GraphNode> test = new Queue();
+    public static Queue<GraphNode> queue = new Queue();
     public static int[] rowMove = {1, -1, 0, 0};
     public static int[] colMove = {0, 0, 1, -1};
     public static String path = "";
@@ -14,11 +14,11 @@ public class BFS {
         }
         matrix[row][col].incrementSeen();
         matrix[row][col].setDistance(0);
-        test.enqueue(matrix[row][col]);
+        queue.enqueue(matrix[row][col]);
 
-        while (!test.isEmpty()) {
+        while (!queue.isEmpty()) {
             FileIO.addToNumberNodesVisited();
-            GraphNode node = test.dequeue();
+            GraphNode node = queue.dequeue();
             row = node.getRow();
             col = node.getCol();
             //How does changing it from node.hasItem() to this fix it WTF
@@ -32,7 +32,7 @@ public class BFS {
 
                 //original[row][col].incrementSeen();
                 original[row][col].removeItem();
-                test.clear();
+                queue.clear();
                 path += GraphNode.getStringPath(matrix[row][col]);
                 totalDistance += matrix[row][col].getDistance();
                 bfs(GraphNode.copyMatrix(original), row, col, false);
@@ -43,7 +43,7 @@ public class BFS {
                         matrix[row + rowMove[k]][col + colMove[k]].incrementSeen();
                         matrix[row + rowMove[k]][col + colMove[k]].setDistance(matrix[row][col].getDistance() + 1);
                         matrix[row + rowMove[k]][col + colMove[k]].setPrevious(node);
-                        test.enqueue(matrix[row + rowMove[k]][col + colMove[k]]);
+                        queue.enqueue(matrix[row + rowMove[k]][col + colMove[k]]);
                     }
                 }
             }
