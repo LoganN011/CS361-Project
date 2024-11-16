@@ -14,6 +14,7 @@ public class DFS {
     private static GraphNode[][] original;
 
     public static void dfs(GraphNode[][] matrix, int row, int col, int distance, boolean isFirst) {
+        FileIO.addToNumberNodesVisited();
         //This finds all of the items not the shortest path because that is not
         //what dfs does so I am confused how I would update it to work with
         //finding the shortest path. Or if that is the requirement im not sure
@@ -48,7 +49,7 @@ public class DFS {
 
     public static void printInfo(GraphNode[][] matrix, int row, int col, int distance, boolean isFirst) {
         dfs(matrix, row, col, distance, isFirst);
-        System.out.println(path);
-        System.out.println(totalDistance);
+        System.out.println("Path Taken:\n" + path);
+        System.out.println("Total Distance traveled: " + totalDistance);
     }
 }

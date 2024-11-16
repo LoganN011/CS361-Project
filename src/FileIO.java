@@ -1,6 +1,8 @@
 import java.util.Scanner;
 
 public class FileIO {
+    public static long startTime = -1;
+    public static int numberNodesVisited = 0;
     public static GraphNode[][] buildGraph(String fileName) {
         Scanner sc = new Scanner(fileName);
         return getGraphNodes(sc);
@@ -44,11 +46,34 @@ public class FileIO {
     }
 
 
+    public static void startTimer() {
+        startTime = System.currentTimeMillis();
+    }
+
+    public static void addToNumberNodesVisited() {
+        numberNodesVisited++;
+    }
+
+    public static void stopTimer() {
+        long endTime = System.currentTimeMillis();
+        System.out.println("TIME take: " + (endTime - startTime) + " ms");
+        System.out.println("Number of nodes visited: " + numberNodesVisited);
+        startTime = -1;
+        numberNodesVisited = 0;
+    }
+
+
     public static void main(String[] args) {
         GraphNode[][] matrix = buildGraph();
         printGraph(matrix);
-        BFS.printInfo(GraphNode.copyMatrix(matrix), 0, 0, true);
-        DFS.printInfo(GraphNode.copyMatrix(matrix), 0, 0, 0, true);
+        GraphNode[][] bfs = GraphNode.copyMatrix(matrix);
+        startTimer();
+        BFS.printInfo(bfs, 0, 0, true);
+        stopTimer();
+        GraphNode[][] dfs = GraphNode.copyMatrix(matrix);
+        startTimer();
+        DFS.printInfo(dfs, 0, 0, 0, true);
+        stopTimer();
 
     }
 }

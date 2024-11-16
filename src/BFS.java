@@ -17,6 +17,7 @@ public class BFS {
         test.enqueue(matrix[row][col]);
 
         while (!test.isEmpty()) {
+            FileIO.addToNumberNodesVisited();
             GraphNode node = test.dequeue();
             row = node.getRow();
             col = node.getCol();
@@ -35,8 +36,6 @@ public class BFS {
                 path += GraphNode.getStringPath(matrix[row][col]);
                 totalDistance += matrix[row][col].getDistance();
                 bfs(GraphNode.copyMatrix(original), row, col, false);
-                //This finds the path that I want but also like a bunch of diffrent ones
-                //The longest path is the one that finds all of the items
             }
             for (int k = 0; k < 4; k++) {
                 if (GraphNode.isValid(matrix, row + rowMove[k], col + colMove[k])) {
@@ -57,8 +56,8 @@ public class BFS {
     public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst) {
         totalDistance = 0;
         bfs(matrix, row, col, isFirst);
-        System.out.println(path);
-        System.out.println(totalDistance);
+        System.out.println("Path Taken:\n" + path);
+        System.out.println("Total Distance traveled: " + totalDistance);
     }
 
 
