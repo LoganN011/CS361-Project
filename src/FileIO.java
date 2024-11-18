@@ -79,7 +79,7 @@ public class FileIO {
         GraphNode[][] bell = GraphNode.copyMatrix(matrix);
         System.out.println("Bellman-Ford: ");
         startTimer();
-        BellmanFord.BellmanFord(bell, 0, 0, true);
+        BellmanFord.printInfo(bell, 0, 0, true);
         stopTimer();
 
     }

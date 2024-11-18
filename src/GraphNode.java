@@ -36,6 +36,9 @@ public class GraphNode {
     }
 
     public String toString() {
+        if (hasItem) {
+            return "I [" + row + "," + col + "],Dist=" + distance;
+        }
 
         return "[" + row + "," + col + "],Dist=" + distance;
     }
