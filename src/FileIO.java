@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class FileIO {
     public static long startTime = -1;
-    public static int numberNodesVisited = 0;
+    public static long numberNodesVisited = 0;
     public static GraphNode[][] buildGraph(String fileName) {
         Scanner sc = new Scanner(fileName);
         return getGraphNodes(sc);
