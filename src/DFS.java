@@ -1,47 +1,55 @@
 public class DFS {
+    /*
+    procedure DFS(G, v) is
+    label v as discovered
+    for all directed edges from v to w that are in G.adjacentEdges(v) do
+        if vertex w is not labeled as discovered then
+            recursively call DFS(G, w)
+     */
+    public static int[] rowMove = {1, -1, 0, 0};
+    public static int[] colMove = {0, 0, 1, -1};
 
-    public static void searchDFS(GraphNode[][] grid, GraphNode current) {
-        // Base case: check if the current node is already seen or is an obstacle
-        if (current == null || !current.isDiscovered()) {
-            return;
+    public static String path = "";
+    public static int totalDistance = 0;
+    private static GraphNode[][] original;
+
+    public static void dfs(GraphNode[][] matrix, int row, int col, int distance, boolean isFirst) {
+        FileIO.addToNumberNodesVisited();
+        //This finds all of the items not the shortest path because that is not
+        //what dfs does so I am confused how I would update it to work with
+        //finding the shortest path. Or if that is the requirement im not sure
+
+        //I want to know if we are supposed to find the same path for all methods???
+        if (isFirst) {
+            path += "[" + matrix[row][col].getRow() + "," + matrix[row][col].getCol() + "] ";
+            original = GraphNode.copyMatrix(matrix);
         }
-
-        // Mark the current node as seen
-        current.incrementSeen();
-
-        // Process the node (collect item if it has one)
-        if (current.hasItem()) {
-            System.out.println("Collected item at (" + current.getRow() + ", " + current.getCol() + ")");
+        matrix[row][col].setDistance(distance);
+        if (original[row][col].hasItem()) {
+            //System.out.println(matrix[row][col]);
+            //GraphNode.printPath(matrix[row][col]);
+            //Saves the last path found as the whole path of the searching
+            //Working but not a short path
+            //Also need something to sum the distance of the nodes but that should be easy
+            path += GraphNode.getStringPath(matrix[row][col]);
+            original[row][col].removeItem();
+            totalDistance += distance;
+            dfs(GraphNode.copyMatrix(original), row, col, 0, false);
         }
-
-        // Define the directions (right, down, left, up)
-        int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-        for (int[] dir : directions) {
-            int newRow = current.getRow() + dir[0];
-            int newCol = current.getCol() + dir[1];
-
-            // Check if the new position is within bounds
-            if (newRow >= 0 && newRow < grid.length && newCol >= 0 && newCol < grid[0].length) {
-                GraphNode neighbor = grid[newRow][newCol];
-
-                // Only visit unvisited and valid neighbors
-                if (neighbor != null && neighbor.isDiscovered()) {
-                    neighbor.setPrevious(current);  // Set current node as previous to track the path
-                    searchDFS(grid, neighbor);  // Recursively explore the neighbor
+        matrix[row][col].incrementSeen();
+        for (int k = 0; k < 4; k++) {
+            if (GraphNode.isValid(matrix, row + rowMove[k], col + colMove[k]) && matrix[row + rowMove[k]][col + colMove[k]] != null) {
+                if (matrix[row + rowMove[k]][col + colMove[k]].isDiscovered()) {
+                    matrix[row + rowMove[k]][col + colMove[k]].setPrevious(matrix[row][col]);
+                    dfs(matrix, row + rowMove[k], col + colMove[k], distance + 1, false);
                 }
             }
         }
     }
 
-    public static void main(String[] args) {
-        // Create a grid with nodes and initialize with items, obstacles
-        GraphNode[][] matrix = FileIO.buildGraph();
-        GraphNode start = matrix[0][0];  // Define the start point (could be any node)
-
-        // Execute DFS
-        searchDFS(matrix, start);
-
-        // Optionally print the grid after DFS for debugging
-        FileIO.printGraph(matrix);
+    public static void printInfo(GraphNode[][] matrix, int row, int col, int distance, boolean isFirst) {
+        dfs(matrix, row, col, distance, isFirst);
+        System.out.println("Path Taken:\n" + path);
+        System.out.println("Total Distance traveled: " + totalDistance);
     }
 }

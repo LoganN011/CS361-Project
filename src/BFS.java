@@ -1,47 +1,65 @@
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class BFS {
-    public static void searchBFS(GraphNode[][] grid, GraphNode start) {
-        Queue<GraphNode> queue = new LinkedList<>();
-        queue.add(start);
-        start.incrementSeen();  // Mark start as seen
+    public static Queue<GraphNode> queue = new Queue();
+    public static int[] rowMove = {1, -1, 0, 0};
+    public static int[] colMove = {0, 0, 1, -1};
+    public static String path = "";
+    public static int totalDistance = 0;
+    private static GraphNode[][] original;
+
+    public static void bfs(GraphNode[][] matrix, int row, int col, boolean isFirst) {
+        //FileIO.printGraph(matrix);
+        if (isFirst) {
+            path += "[" + matrix[row][col].getRow() + "," + matrix[row][col].getCol() + "] ";
+            original = GraphNode.copyMatrix(matrix);
+        }
+        matrix[row][col].incrementSeen();
+        matrix[row][col].setDistance(0);
+        queue.enqueue(matrix[row][col]);
 
         while (!queue.isEmpty()) {
-            GraphNode current = queue.poll();
+            FileIO.addToNumberNodesVisited();
+            GraphNode node = queue.dequeue();
+            row = node.getRow();
+            col = node.getCol();
+            //How does changing it from node.hasItem() to this fix it WTF
+            //I do not understand objects
+            if (original[row][col].hasItem()) {
+                //My guess for finding the shortest path is that we will then call
+                //bfs from here and delete the item in that spot. and reset the
+                //queue maybe Idk lol
+                // System.out.println(node);
+                //GraphNode.printPath(matrix[row][col]);
 
-            // Check if this node has an item
-            if (current.hasItem()) {
-                System.out.println("Collected item at (" + current.getRow() + ", " + current.getCol() + ")");
+                //original[row][col].incrementSeen();
+                original[row][col].removeItem();
+                queue.clear();
+                path += GraphNode.getStringPath(matrix[row][col]);
+                totalDistance += matrix[row][col].getDistance();
+                bfs(GraphNode.copyMatrix(original), row, col, false);
             }
-
-            // Explore neighbors (up, down, left, right)
-            int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-            for (int[] dir : directions) {
-                int newRow = current.getRow() + dir[0];
-                int newCol = current.getCol() + dir[1];
-
-                // Ensure new position is within bounds and not yet seen
-                if (newRow >= 0 && newRow < grid.length && newCol >= 0 && newCol < grid[0].length) {
-                    GraphNode neighbor = grid[newRow][newCol];
-                    if (neighbor != null && neighbor.isDiscovered()) {
-                        neighbor.incrementSeen();  // Mark as seen
-                        neighbor.setPrevious(current);  // Track path
-                        neighbor.setDistance(current.distance + 1);  // Update distance
-                        queue.add(neighbor);
+            for (int k = 0; k < 4; k++) {
+                if (GraphNode.isValid(matrix, row + rowMove[k], col + colMove[k])) {
+                    if (matrix[row + rowMove[k]][col + colMove[k]] != null && matrix[row + rowMove[k]][col + colMove[k]].isDiscovered()) {
+                        matrix[row + rowMove[k]][col + colMove[k]].incrementSeen();
+                        matrix[row + rowMove[k]][col + colMove[k]].setDistance(matrix[row][col].getDistance() + 1);
+                        matrix[row + rowMove[k]][col + colMove[k]].setPrevious(node);
+                        queue.enqueue(matrix[row + rowMove[k]][col + colMove[k]]);
                     }
                 }
             }
+
+            node.incrementSeen();
         }
+
     }
 
-    public static void main(String[] args) {
-        // Assume the file or input contains the grid information
-        GraphNode[][] matrix = FileIO.buildGraph();  // Use your FileIO class for grid input
-        GraphNode start = matrix[0][0];  // Starting point, can be set to any point in the grid
-
-        // Run BFS
-        searchBFS(matrix, start);
-        FileIO.printGraph(matrix);  // Optional: Print the graph after BFS for debugging
+    public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst) {
+        totalDistance = 0;
+        bfs(matrix, row, col, isFirst);
+        System.out.println("Path Taken:\n" + path);
+        System.out.println("Total Distance traveled: " + totalDistance);
     }
+
+
 }
