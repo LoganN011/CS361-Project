@@ -36,9 +36,6 @@ public class GraphNode {
     }
 
     public String toString() {
-        if (hasItem) {
-            return "I [" + row + "," + col + "],Dist=" + distance;
-        }
 
         return "[" + row + "," + col + "],Dist=" + distance;
     }
@@ -118,6 +115,13 @@ public class GraphNode {
     }
     public int getDown(){
         return 1;
+    }
+
+    public boolean isMoveLegal(int row, int col ) {
+        if(row < 0 || row > some sort of val for graph [][] rows || then same thing for cols ){
+             return true;
+        }
+        return false;
     }
 
      */
