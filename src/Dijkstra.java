@@ -80,6 +80,7 @@ public class Dijkstra {
             // Relax neighbors
             for (int k = 0; k < 4; k++) {
                 // get row and col after move implemented
+                FileIO.addToNumberNodesVisited();
                 int row = current.getRow() + rowMove[k];
                 int col = current.getCol() + colMove[k];
 
