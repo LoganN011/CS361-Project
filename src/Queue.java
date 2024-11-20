@@ -1,6 +1,5 @@
-import java.util.Iterator;
-
-public class Queue<T> implements Iterable<T> {
+public class Queue<T> {
+    //https://www.geeksforgeeks.org/queue-linked-list-implementation/
     private Node<T> front, rear;
 
     public Queue() {
@@ -12,7 +11,7 @@ public class Queue<T> implements Iterable<T> {
     }
 
     public void enqueue(T newData) {
-        Node<T> newNode = new Node<>(newData);
+        Node<T> newNode = new Node(newData);
         if (rear == null) {
             front = rear = newNode;
         } else {
@@ -23,8 +22,7 @@ public class Queue<T> implements Iterable<T> {
 
     public T dequeue() {
         if (isEmpty()) {
-            System.out.println("Queue is empty");
-            return null;
+            System.out.println("Broken");
         }
         Node<T> temp = front;
         front = front.next();
@@ -34,18 +32,17 @@ public class Queue<T> implements Iterable<T> {
         return temp.data();
     }
 
+    //Maybe make these last two return the node and not the data
     public T front() {
         if (isEmpty()) {
-            System.out.println("Queue is empty");
-            return null;
+            System.out.println("Broken");
         }
         return front.data();
     }
 
     public T rear() {
         if (isEmpty()) {
-            System.out.println("Queue is empty");
-            return null;
+            System.out.println("Broken");
         }
         return rear.data();
     }
@@ -54,26 +51,5 @@ public class Queue<T> implements Iterable<T> {
         front = rear = null;
     }
 
-    // Implementing the Iterable interface
-    @Override
-    public Iterator<T> iterator() {
-        return new Iterator<T>() {
-            private Node<T> current = front;
 
-            @Override
-            public boolean hasNext() {
-                return current != null;
-            }
-
-            @Override
-            public T next() {
-                if (!hasNext()) {
-                    throw new IllegalStateException("No more elements in queue");
-                }
-                T data = current.data();
-                current = current.next();
-                return data;
-            }
-        };
-    }
 }
