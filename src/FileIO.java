@@ -1,7 +1,4 @@
 import java.util.Scanner;
-import java.util.List;
-import java.util.Arrays;
-import java.util.ArrayList;
 
 public class FileIO {
     public static int numOfItems = 1;
@@ -33,7 +30,6 @@ public class FileIO {
                 else if (line.charAt(j) == 'I') {
                     matrix[i][j] = new GraphNode(i, j, "ITEM", true);
                     matrix[i][j].setAdjacencyPlace(count);
-                    System.out.println(matrix[i][j].getAdjacencyPlace());
                     numOfItems++;
                     count ++;
                 }
@@ -61,10 +57,10 @@ public class FileIO {
     public static void main(String[] args) {
         GraphNode[][] matrix = buildGraph();
         printGraph(matrix);
-        BFS.printInfo(GraphNode.copyMatrix(matrix), 0, 0, true);
-        DFS.printInfo(GraphNode.copyMatrix(matrix), 0, 0, 0, true);
-        dijkstra.dijkstra(GraphNode.copyMatrix(matrix), numOfItems);
-        System.out.println(numOfItems);
+        //BFS.printInfo(GraphNode.copyMatrix(matrix), 0, 0, true);
+        //DFS.printInfo(GraphNode.copyMatrix(matrix), 0, 0, 0, true);
+        Dijkstra.printInfo(GraphNode.copyMatrix(matrix), 0, 0, true);
+        // System.out.println(numOfItems);
 
     }
 }
