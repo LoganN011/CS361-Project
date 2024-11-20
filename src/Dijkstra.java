@@ -69,6 +69,9 @@ public class Dijkstra {
         MinHeap<GraphNode> minHeap = new MinHeap<>();
         minHeap.insert(matrix[startRow][startCol]);
 
+        // initialize closest item to null
+        closestItem = null;
+
         // while the head is not empty
         while (!minHeap.isEmpty()) {
             // pop minimum weight node in heap
@@ -87,6 +90,7 @@ public class Dijkstra {
                     // relax distance for new node
                     if (newNode.getDistance() > current.getDistance() + 1) {
                         newNode.setDistance(current.getDistance() + 1);
+                        newNode.setPrevious(current);
 
                         // Check if the new node has an item and is closer than the current closestNode and update
                         if (closestItem == null && newNode.hasItem()) {
@@ -114,7 +118,6 @@ public class Dijkstra {
             // reset for next dijkstra call
             startRow = closestItem.getRow();
             startCol = closestItem.getCol();
-            closestItem = null;
             dijkstra(GraphNode.copyMatrix(original), startRow, startCol, false);
         }
     }

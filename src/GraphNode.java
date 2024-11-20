@@ -1,4 +1,4 @@
-public class GraphNode {
+public class GraphNode implements Comparable<GraphNode> {
     //She recommends that we use a 2d array to represent the grid and
     // just use that to look at the nodes next to each one
     //https://www.geeksforgeeks.org/graph-adjacency-matrix-in-java/
@@ -164,4 +164,8 @@ public class GraphNode {
         return output;
     }
 
+    @Override
+    public int compareTo(GraphNode o) {
+        return Integer.compare(this.distance, o.distance);
+    }
 }
