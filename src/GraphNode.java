@@ -1,45 +1,28 @@
 public class GraphNode {
-    //She recommends that we use a 2d array to represent the grid and
-    // just use that to look at the nodes next to each one
-    //https://www.geeksforgeeks.org/graph-adjacency-matrix-in-java/
-    //https://youcademy.org/graph-breadth-first-search/
     private int seen;
     private int row;
     private int col;
-    //Do we want a label for each node??
     private String label;
     private boolean hasItem;
     private GraphNode previous;
     private int distance;
-
-    /**
-     *
-     * @param row
-     * @param col
-     * @param label
-     * @param hasItem
-     *
-     * might be useful to add a graph row and col size
-     */
+    private int g; // Cost from start to this node
+    private int h; // Heuristic cost to the goal
 
     public GraphNode(int row, int col, String label, boolean hasItem) {
-        //Will also need a distance
-        //Will need other stuff based the type of searching
         this.row = row;
         this.col = col;
         this.label = label;
         this.hasItem = hasItem;
-        //0 means not discovered
-        //1 means seen
-        //2 means explored
-        seen = 0;
+        this.seen = 0;
+        this.g = Integer.MAX_VALUE; // Initialize g to a high value (unreachable)
+        this.h = Integer.MAX_VALUE; // Initialize h to a high value
     }
 
     public String toString() {
         if (hasItem) {
             return "I [" + row + "," + col + "],Dist=" + distance;
         }
-
         return "[" + row + "," + col + "],Dist=" + distance;
     }
 
@@ -87,42 +70,6 @@ public class GraphNode {
         this.distance = distance;
     }
 
-    /**
-     * I am thinking to add some sort of directional values for up, down, left,
-     * and right
-     * i think it might be beneficial so i will write out what I had in mind but
-     * I am just not sure on the best approach for it, so I will need some input
-     *
-     * also, we might want there to be some sort of static value for the total
-     * row and col size ???
-     public void setLeft(){
-
-     }
-     public int getLeft(){
-     return 1;
-     }
-     public void setRight(){
-
-     }
-     public int getRight(){
-     return 1;
-     }
-     public void setUp(){
-
-     }
-     public int getUp(){
-     return 1;
-     }
-     public void setDown(){
-
-     }
-     public int getDown(){
-     return 1;
-     }
-
-     */
-
-
     public int getDistance() {
         return distance;
     }
@@ -140,7 +87,6 @@ public class GraphNode {
                 } else {
                     newMatrix[i][j] = null;
                 }
-
             }
         }
         return newMatrix;
@@ -160,4 +106,25 @@ public class GraphNode {
         return output;
     }
 
+    // New method for A* algorithm to calculate f(n)
+    public int getF() {
+        return this.g + this.h; // f(n) = g(n) + h(n)
+    }
+
+    // New methods for g and h
+    public int getG() {
+        return g;
+    }
+
+    public void setG(int g) {
+        this.g = g;
+    }
+
+    public int getH() {
+        return h;
+    }
+
+    public void setH(int h) {
+        this.h = h;
+    }
 }
