@@ -76,11 +76,11 @@ public class Dijkstra {
         while (!minHeap.isEmpty()) {
             // pop minimum weight node in heap
             GraphNode current = minHeap.extractMin();
-
+            FileIO.addToNumberNodesVisited();
             // Relax neighbors
             for (int k = 0; k < 4; k++) {
                 // get row and col after move implemented
-                FileIO.addToNumberNodesVisited();
+
                 int row = current.getRow() + rowMove[k];
                 int col = current.getCol() + colMove[k];
 
