@@ -1,136 +1,115 @@
 public class AStar {
 
-    public static int[] rowMove = {1, -1, 0, 0};  // Moves for up, down, left, right
+    public static int[] rowMove = {1, -1, 0, 0};
     public static int[] colMove = {0, 0, 1, -1};
-
     public static String path = "";
     public static int totalDistance = 0;
+    private static GraphNode[][] original;
+    private static GraphNode goalNode;
 
-    public static void aStar(GraphNode[][] matrix, int startRow, int startCol, int goalRow, int goalCol) {
-        Queue<GraphNode> openList = new Queue<>();
-        boolean[][] closedList = new boolean[matrix.length][matrix[0].length];
+    // Heuristic function: Manhattan distance
+    public static int manhattanDistance(GraphNode current, GraphNode goal) {
+        return Math.abs(current.getRow() - goal.getRow()) + Math.abs(current.getCol() - goal.getCol());
+    }
 
-        // Initialize the starting node
-        GraphNode startNode = matrix[startRow][startCol];
-        startNode.setG(0);
-        startNode.setH(calculateHeuristic(startRow, startCol, goalRow, goalCol));
-        openList.enqueue(startNode);
+    // Initialize the graph nodes for A* (set distance to infinity initially)
+    public static void initializeSingleSource(GraphNode[][] matrix, int startRow, int startCol) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j] != null) {
+                    matrix[i][j].setDistance(Integer.MAX_VALUE);  // Set all distances to infinity initially
+                    matrix[i][j].setPrevious(null);  // No previous node at start
+                }
+            }
+        }
+        matrix[startRow][startCol].setDistance(0);  // Set start node distance to 0
+    }
 
-        while (!openList.isEmpty()) {
-            // Get the node with the lowest f = g + h manually
-            GraphNode current = getMinNode(openList);
-            openList.dequeue();  // Remove the node with the lowest f
+    // A* Algorithm implementation
+    public static void aStar(GraphNode[][] matrix, int startRow, int startCol, boolean isFirst) {
+        if (isFirst) {
+            path += "[" + matrix[startRow][startCol].getRow() + "," + matrix[startRow][startCol].getCol() + "] ";
+            original = GraphNode.copyMatrix(matrix);
+            goalNode = findGoalNode(matrix);  // Find the goal node (the node with an item)
+        }
 
-            closedList[current.getRow()][current.getCol()] = true;
+        // Initialize all distances to infinity except the start node
+        initializeSingleSource(matrix, startRow, startCol);
 
-            // If goal is reached, reconstruct the path and return
-            if (current.getRow() == goalRow && current.getCol() == goalCol) {
-                path = GraphNode.getStringPath(current);
-                totalDistance = current.getG();
-                System.out.println("Path: " + path);
-                System.out.println("Total Distance: " + totalDistance);
+        // Create a priority queue to store nodes based on their f = g + h value
+        MinHeap<GraphNode> minHeap = new MinHeap<>();
+
+        // Set the f value for the start node and add it to the priority queue
+        matrix[startRow][startCol].setDistance(manhattanDistance(matrix[startRow][startCol], goalNode));
+        minHeap.insert(matrix[startRow][startCol]);
+
+        while (!minHeap.isEmpty()) {
+            // Get the node with the smallest f value
+            GraphNode current = minHeap.extractMin();
+
+            // If we have reached the goal, reconstruct the path
+            if (current == goalNode) {
+                path = reconstructPath(current);
+                totalDistance += current.getDistance();
                 return;
             }
 
             // Explore neighbors
-            for (int i = 0; i < 4; i++) {
-                int newRow = current.getRow() + rowMove[i];
-                int newCol = current.getCol() + colMove[i];
+            for (int k = 0; k < 4; k++) {
+                int row = current.getRow() + rowMove[k];
+                int col = current.getCol() + colMove[k];
 
-                if (GraphNode.isValid(matrix, newRow, newCol) && !closedList[newRow][newCol]) {
-                    GraphNode neighbor = matrix[newRow][newCol];
-                    if (neighbor == null) continue;  // Skip invalid or blocked cells
+                if (GraphNode.isValid(matrix, row, col) && matrix[row][col] != null) {
+                    GraphNode neighbor = matrix[row][col];
+                    int tentativeG = current.getDistance() + 1;  // g value (cost from start)
 
-                    int tentativeG = current.getG() + 1;
+                    // Calculate the heuristic (h value)
+                    int h = manhattanDistance(neighbor, goalNode);
 
-                    // If the node is not in the open list or we found a shorter path
-                    if (tentativeG < neighbor.getG() || !contains(openList, neighbor)) {
-                        neighbor.setG(tentativeG);
-                        neighbor.setH(calculateHeuristic(newRow, newCol, goalRow, goalCol));
+                    // Calculate the total f value (f = g + h)
+                    int f = tentativeG + h;
+
+                    // If a shorter path to the neighbor is found
+                    if (tentativeG < neighbor.getDistance()) {
+                        neighbor.setDistance(tentativeG);
                         neighbor.setPrevious(current);
 
-                        openList.enqueue(neighbor);
+                        // Add the neighbor to the priority queue with the updated f value
+                        minHeap.insert(neighbor);
                     }
                 }
             }
         }
-
-        System.out.println("No path found to the goal.");
     }
 
-    // Heuristic: Manhattan distance
-    public static int calculateHeuristic(int currentRow, int currentCol, int goalRow, int goalCol) {
-        return Math.abs(currentRow - goalRow) + Math.abs(currentCol - goalCol);
-    }
-
-    // Custom function to find the node with the smallest f = g + h
-    private static GraphNode getMinNode(Queue<GraphNode> queue) {
-        GraphNode minNode = queue.front();
-        int minF = minNode.getG() + minNode.getH();
-
-        for (GraphNode node : queue) {
-            int f = node.getG() + node.getH();
-            if (f < minF) {
-                minNode = node;
-                minF = f;
-            }
+    // Reconstruct the path by backtracking from the goal node
+    private static String reconstructPath(GraphNode goal) {
+        StringBuilder result = new StringBuilder();
+        GraphNode current = goal;
+        while (current != null) {
+            result.insert(0, "[" + current.getRow() + "," + current.getCol() + "] ");
+            current = current.getPrevious();
         }
-        return minNode;
+        return result.toString().trim();
     }
 
-    // Check if a node is already in the queue
-    private static boolean contains(Queue<GraphNode> queue, GraphNode node) {
-        for (GraphNode n : queue) {
-            if (n.equals(node)) {
-                return true;
-            }
-        }
-        return false;
+    public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst) {
+        totalDistance = 0;
+        path = "";
+        aStar(matrix, row, col, isFirst);
+        System.out.println("Path Taken:\n" + path);
+        System.out.println("Total Distance traveled: " + totalDistance);
     }
 
-    public static void main(String[] args) {
-        String[] grid = {
-                "00000000000000I00000000000000000000000",
-                "0000000000000000000000000000I000000000",
-                "00I0000000I000000000000000000000000000",
-                "000I0000000000000I00000000000000I00000",
-                "00000000000000000000000000000000000000",
-                "000000I0000000000000000I00000000000000",
-                "00000000000000000000000000000000000000",
-                "0000000000000I000000000000000000I00000",
-                "00000000000000000000000000000000000000",
-                "00000000000000000000000000000000000000",
-                "000I000I00000000000000000000I000000000",
-                "0000000000000000000000II00000000000000"
-
-        };
-
-        GraphNode[][] matrix = parseGrid(grid);
-
-        // Define start and goal
-        int startRow = 0, startCol = 0;
-        int goalRow = 11, goalCol = 24;
-
-        aStar(matrix, startRow, startCol, goalRow, goalCol);
-    }
-
-    public static GraphNode[][] parseGrid(String[] grid) {
-        int rows = grid.length;
-        int cols = grid[0].length();
-        GraphNode[][] matrix = new GraphNode[rows][cols];
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                char cell = grid[i].charAt(j);
-                if (cell == 'I') {
-                    matrix[i][j] = new GraphNode(i, j, "Item", true); // Node with an item
-                } else if (cell == '0') {
-                    matrix[i][j] = new GraphNode(i, j, "Empty", false); // Empty node
-                } else {
-                    matrix[i][j] = null; // Invalid or blocked node
+    // Helper method to find the goal node (node with item)
+    private static GraphNode findGoalNode(GraphNode[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j] != null && matrix[i][j].hasItem()) {
+                    return matrix[i][j];
                 }
             }
         }
-        return matrix;
+        return null;  // No goal node found
     }
 }

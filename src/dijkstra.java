@@ -1,91 +1,133 @@
-public class dijkstra {
 /**
- * We will be utilizing the Dijkstra algorithm to find the shortest path to each
- * item consecutively from the source node
+ * Dijkstra Shortest Path to all Items
  *
- * 1) we need to iterate through the matrix of items, each item having a total
- * 'cost' of infinity except for the starting node, being 0.
+ * Steps :
+ * 1) check if this is the first algorithm call; if it is we remove the item
+ *    from the first place, add the starting place to the path, copy the matrix
+ *    to the original matrix initialize the graph weights
  *
- * 2) we will need an array to represent if the node was visited, so when all
- * are visited we can take the total cost of that
- *
- * 3) we will then find the minimum summation of paths or total cost for each
- * path that has a fully visited array
- *
- * 4) since we do not have assigned weights, this will allso need to be
- * calculated with a sort of counter that then can store that weight and resent
- * the counter
- *
- *
- * https://www.baeldung.com/cs/shortest-path-visiting-all-nodes
+ * 2) initialize the graph weights to inf except for current node is 0
  *
  */
-}
 
-/**
- * public class BFS {
- *     public static Queue<GraphNode> test = new Queue();
- *     public static int[] rowMove = {1, -1, 0, 0};
- *     public static int[] colMove = {0, 0, 1, -1};
- *     public static String path = "";
- *     public static int totalDistance = 0;
- *     private static GraphNode[][] original;
- *
- *     public static void bfs(GraphNode[][] matrix, int row, int col, boolean isFirst) {
- *         //FileIO.printGraph(matrix);
- *         if (isFirst) {
- *             path += "[" + matrix[row][col].getRow() + "," + matrix[row][col].getCol() + "] ";
- *             original = GraphNode.copyMatrix(matrix);
- *         }
- *         matrix[row][col].incrementSeen();
- *         matrix[row][col].setDistance(0);
- *         test.enqueue(matrix[row][col]);
- *
- *         while (!test.isEmpty()) {
- *             GraphNode node = test.dequeue();
- *             row = node.getRow();
- *             col = node.getCol();
- *             //How does changing it from node.hasItem() to this fix it WTF
- *             //I do not understand objects
- *             if (original[row][col].hasItem()) {
- *                 //My guess for finding the shortest path is that we will then call
- *                 //bfs from here and delete the item in that spot. and reset the
- *                 //queue maybe Idk lol
- *                 // System.out.println(node);
- *                 //GraphNode.printPath(matrix[row][col]);
- *
- *                 //original[row][col].incrementSeen();
- *                 original[row][col].removeItem();
- *                 test.clear();
- *                 path += GraphNode.getStringPath(matrix[row][col]);
- *                 totalDistance += matrix[row][col].getDistance();
- *                 bfs(GraphNode.copyMatrix(original), row, col, false);
- *                 //This finds the path that I want but also like a bunch of diffrent ones
- *                 //The longest path is the one that finds all of the items
- *             }
- *             for (int k = 0; k < 4; k++) {
- *                 if (GraphNode.isValid(matrix, row + rowMove[k], col + colMove[k])) {
- *                     if (matrix[row + rowMove[k]][col + colMove[k]] != null && matrix[row + rowMove[k]][col + colMove[k]].isDiscovered()) {
- *                         matrix[row + rowMove[k]][col + colMove[k]].incrementSeen();
- *                         matrix[row + rowMove[k]][col + colMove[k]].setDistance(matrix[row][col].getDistance() + 1);
- *                         matrix[row + rowMove[k]][col + colMove[k]].setPrevious(node);
- *                         test.enqueue(matrix[row + rowMove[k]][col + colMove[k]]);
- *                     }
- *                 }
- *             }
- *
- *             node.incrementSeen();
- *         }
- *
- *     }
- *
- *     public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst) {
- *         totalDistance = 0;
- *         bfs(matrix, row, col, isFirst);
- *         System.out.println(path);
- *         System.out.println(totalDistance);
- *     }
- *
- *
- * }
- */
+public class Dijkstra {
+
+    /**
+     * rowMove & colMove : movements to traverse the grid and find neighbor
+     *                     nodes
+     * path              : string that will hold grid points representing the
+     *                     path taken
+     * totalDistance     : int to count the steps taken along the final shortest
+     *                     path
+     * original          : stores the GraphNode objects from the original matrix
+     * closestItem       : stores next target node -> closest node with an item
+     */
+
+    public static int[] rowMove = {1, -1, 0, 0};
+    public static int[] colMove = {0, 0, 1, -1};
+    public static String path = "";
+    public static int totalDistance = 0;
+    private static GraphNode[][] original;
+    private static GraphNode closestItem;
+
+    /**
+     * Initializes a matrix with HUGE wight vals
+     * @param matrix : initialized matrix with inf weight vals
+     */
+    public static void initializeSingleSource(GraphNode[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j] != null) {
+                    matrix[i][j].setDistance(Integer.MAX_VALUE);
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @param matrix : grid matrix of warehouse
+     * @param startRow : start row
+     * @param startCol : start col
+     * @param isFirst : is this the first time we are calling the algorithm?
+     */
+    public static void dijkstra(GraphNode[][] matrix, int startRow, int startCol, boolean isFirst) {
+        if (isFirst) {
+            matrix[startRow][startCol].removeItem();
+            // add start to path
+            path += "[" + matrix[startRow][startCol].getRow() + "," + matrix[startRow][startCol].getCol() + "] ";
+            // copy the original matrix
+            original = GraphNode.copyMatrix(matrix);
+        }
+
+        // set all weights to inf except current node
+        initializeSingleSource(matrix);
+        matrix[startRow][startCol].setDistance(0);
+
+        // initialize min-heap / priority queue for weights
+        // insert
+        MinHeap<GraphNode> minHeap = new MinHeap<>();
+        minHeap.insert(matrix[startRow][startCol]);
+
+        // initialize closest item to null
+        closestItem = null;
+
+        // while the head is not empty
+        while (!minHeap.isEmpty()) {
+            // pop minimum weight node in heap
+            GraphNode current = minHeap.extractMin();
+
+            // Relax neighbors
+            for (int k = 0; k < 4; k++) {
+                // get row and col after move implemented
+                FileIO.addToNumberNodesVisited();
+                int row = current.getRow() + rowMove[k];
+                int col = current.getCol() + colMove[k];
+
+                // if the location of the move is within bounds and is not a barrier, set the node as a new node neighbor
+                if (GraphNode.isValid(matrix, row, col) && matrix[row][col] != null) {
+                    GraphNode newNode = matrix[row][col];
+
+                    // relax distance for new node
+                    if (newNode.getDistance() > current.getDistance() + 1) {
+                        newNode.setDistance(current.getDistance() + 1);
+                        newNode.setPrevious(current);
+
+                        // Check if the new node has an item and is closer than the current closestNode and update
+                        if (closestItem == null && newNode.hasItem()) {
+                            closestItem = newNode;
+                        } else if (closestItem != null && closestItem.getDistance() > newNode.getDistance() && newNode.hasItem()) {
+                            closestItem = newNode;
+                        }
+
+                        minHeap.insert(newNode);
+                    }
+                }
+            }
+        }
+
+        // If a closestNode with an item was found
+        if (closestItem != null) {
+
+            // remove item from original to mark it is found
+            original[closestItem.getRow()][closestItem.getCol()].removeItem();
+
+            // update the path & total distance
+            path += GraphNode.getStringPath(closestItem);
+            totalDistance += closestItem.getDistance();
+
+            // reset for next dijkstra call
+            startRow = closestItem.getRow();
+            startCol = closestItem.getCol();
+            dijkstra(GraphNode.copyMatrix(original), startRow, startCol, false);
+        }
+    }
+
+    public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst) {
+        totalDistance = 0;
+        path = "";
+        dijkstra(matrix, row, col, isFirst);
+        System.out.println("Path Taken:\n" + path);
+        System.out.println("Total Distance traveled: " + totalDistance);
+    }
+}
