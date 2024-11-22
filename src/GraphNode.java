@@ -35,27 +35,32 @@ public class GraphNode implements Comparable<GraphNode> {
         seen = 0;
     }
 
+    //String to represent each node
     public String toString() {
-
         return "[" + row + "," + col + "],Dist=" + distance;
     }
 
+    //gets the current row
     public int getRow() {
         return row;
     }
 
+    //gets the current column
     public int getCol() {
         return col;
     }
 
+    //Checks if the node has an item
     public boolean hasItem() {
         return hasItem;
     }
 
+    //removes the item from the node
     public void removeItem() {
         hasItem = false;
     }
 
+    //Checks if the current node is discovered
     public boolean isDiscovered() {
         return seen == 0;
     }
@@ -72,6 +77,7 @@ public class GraphNode implements Comparable<GraphNode> {
         seen++;
     }
 
+    //sets the previous node
     public void setPrevious(GraphNode previous) {
         this.previous = previous;
     }
@@ -80,19 +86,22 @@ public class GraphNode implements Comparable<GraphNode> {
         return previous;
     }
 
+    //sets the distance of the node
     public void setDistance(int distance) {
         this.distance = distance;
     }
 
-
+    //gets the distance of the node
     public int getDistance() {
         return distance;
     }
 
+    //Checks if a provided row and col is with in the matrix
     public static boolean isValid(GraphNode[][] matrix, int row, int col) {
         return row >= 0 && row < matrix.length && col >= 0 && col < matrix[0].length;
     }
 
+    //copies a provided matrix and the info about it
     public static GraphNode[][] copyMatrix(GraphNode[][] matrix) {
         GraphNode[][] newMatrix = new GraphNode[matrix.length][matrix[0].length];
         for (int i = 0; i < matrix.length; i++) {
@@ -108,11 +117,13 @@ public class GraphNode implements Comparable<GraphNode> {
         return newMatrix;
     }
 
+    //Prints the path of the node
     public static void printPath(GraphNode current) {
         String output = getStringPath(current);
         System.out.println(output);
     }
 
+    //gets string version of the path of the current node
     public static String getStringPath(GraphNode current) {
         String output = "";
         while (current.previous != null) {
