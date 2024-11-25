@@ -99,11 +99,11 @@ public class GraphNode implements Comparable<GraphNode> {
 
     public static String getStringPath(GraphNode current) {
         String output = "";
-        while (current != null) {
-            output = "[" + current.getRow() + "," + current.getCol() + "] " + output;
-            current = current.getPrevious();
+        while (current.previous != null) {
+            output = "[" + current.getCol() + "," + current.getRow() + "] " + output;
+            current = current.previous;
         }
-        return output.trim();
+        return output;
     }
 
     @Override
