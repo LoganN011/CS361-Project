@@ -116,7 +116,7 @@ public class Dijkstra {
             path += GraphNode.getStringPath(closestItem);
             totalDistance += closestItem.getDistance();
 
-            // reset for next dijkstra call
+            // reset for next Dijkstra call
             startRow = closestItem.getRow();
             startCol = closestItem.getCol();
             dijkstra(GraphNode.copyMatrix(original), startRow, startCol, false);
