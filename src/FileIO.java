@@ -102,13 +102,10 @@ public class FileIO {
         stopTimer();
 
         // A* algorithm for multiple targets
-        int startRow = 0; // Starting row (you can modify this based on input)
-        int startCol = 0; // Starting column (modify based on input)
-
-        GraphNode[][] aStarMatrix = GraphNode.copyMatrix(matrix); // Copy of matrix for A*
+        GraphNode[][] aStar = GraphNode.copyMatrix(matrix); // Copy of matrix for A*
         System.out.println("\nA*:  ");
         startTimer();
-        AStar.printInfo(aStarMatrix, startRow, startCol);
+        AStar.printInfo(aStar, 0 ,0 ,true);
         stopTimer();
     }
 
