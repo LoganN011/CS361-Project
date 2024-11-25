@@ -1,5 +1,5 @@
 public class BFS {
-    public static Queue<GraphNode> queue = new Queue();
+    public static Queue<GraphNode> queue = new Queue<>();
     public static int[] rowMove = {1, -1, 0, 0};
     public static int[] colMove = {0, 0, 1, -1};
     public static String path = "";
@@ -7,7 +7,7 @@ public class BFS {
     private static GraphNode[][] original;
 
     public static void bfs(GraphNode[][] matrix, int row, int col, boolean isFirst) {
-        //FileIO.printGraph(matrix);
+        //First run copies the matrix to be used in recursion
         if (isFirst) {
             path += "[" + matrix[row][col].getRow() + "," + matrix[row][col].getCol() + "] ";
             original = GraphNode.copyMatrix(matrix);
@@ -17,26 +17,23 @@ public class BFS {
         queue.enqueue(matrix[row][col]);
 
         while (!queue.isEmpty()) {
+            //mark node as visited
             FileIO.addToNumberNodesVisited();
             GraphNode node = queue.dequeue();
             row = node.getRow();
             col = node.getCol();
-            //How does changing it from node.hasItem() to this fix it WTF
-            //I do not understand objects
+            //if the node as an item start remove the item and start again from
+            // the point with the item
             if (original[row][col].hasItem()) {
-                //My guess for finding the shortest path is that we will then call
-                //bfs from here and delete the item in that spot. and reset the
-                //queue maybe Idk lol
-                // System.out.println(node);
-                //GraphNode.printPath(matrix[row][col]);
-
-                //original[row][col].incrementSeen();
                 original[row][col].removeItem();
                 queue.clear();
+                //saving the path to get here and the distance as well
                 path += GraphNode.getStringPath(matrix[row][col]);
                 totalDistance += matrix[row][col].getDistance();
                 bfs(GraphNode.copyMatrix(original), row, col, false);
             }
+            //Looking in all 4 direction you could move from a node (up, down, left, and right)
+            // and adding each of the nodes that have not been discovered to the queue to be explored
             for (int k = 0; k < 4; k++) {
                 if (GraphNode.isValid(matrix, row + rowMove[k], col + colMove[k])) {
                     if (matrix[row + rowMove[k]][col + colMove[k]] != null && matrix[row + rowMove[k]][col + colMove[k]].isDiscovered()) {
@@ -53,10 +50,21 @@ public class BFS {
 
     }
 
+    /**
+     * Prints the info of BFS
+     * Finds the path to all items in the provided matrix and prints that
+     * also tells the distance of the path
+     *
+     * @param matrix  graph that is being searched
+     * @param row     starting row
+     * @param col     starting col
+     * @param isFirst is this the first time bfs is being called on this graph
+     */
     public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst) {
         totalDistance = 0;
         bfs(matrix, row, col, isFirst);
         System.out.println("Path Taken:\n" + path);
         System.out.println("Total Distance traveled: " + totalDistance);
     }
+
 }

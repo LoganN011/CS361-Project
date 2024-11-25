@@ -35,27 +35,32 @@ public class GraphNode implements Comparable<GraphNode> {
         seen = 0;
     }
 
+    //String to represent each node
     public String toString() {
-
         return "[" + row + "," + col + "],Dist=" + distance;
     }
 
+    //gets the current row
     public int getRow() {
         return row;
     }
 
+    //gets the current column
     public int getCol() {
         return col;
     }
 
+    //Checks if the node has an item
     public boolean hasItem() {
         return hasItem;
     }
 
+    //removes the item from the node
     public void removeItem() {
         hasItem = false;
     }
 
+    //Checks if the current node is discovered
     public boolean isDiscovered() {
         return seen == 0;
     }
@@ -72,6 +77,7 @@ public class GraphNode implements Comparable<GraphNode> {
         seen++;
     }
 
+    //sets the previous node
     public void setPrevious(GraphNode previous) {
         this.previous = previous;
     }
@@ -80,61 +86,22 @@ public class GraphNode implements Comparable<GraphNode> {
         return previous;
     }
 
+    //sets the distance of the node
     public void setDistance(int distance) {
         this.distance = distance;
     }
 
-    /**
-     * I am thinking to add some sort of directional values for up, down, left,
-     * and right
-     * i think it might be beneficial so i will write out what I had in mind but
-     * I am just not sure on the best approach for it, so I will need some input
-     *
-     * also, we might want there to be some sort of static value for the total
-     * row and col size ???
-    public void setLeft(){
-
-    }
-    public int getLeft(){
-        return 1;
-    }
-    public void setRight(){
-
-    }
-    public int getRight(){
-        return 1;
-    }
-    public void setUp(){
-
-    }
-    public int getUp(){
-        return 1;
-    }
-    public void setDown(){
-
-    }
-    public int getDown(){
-        return 1;
-    }
-
-    public boolean isMoveLegal(int row, int col ) {
-        if(row < 0 || row > some sort of val for graph [][] rows || then same thing for cols ){
-             return true;
-        }
-        return false;
-    }
-
-     */
-
-
+    //gets the distance of the node
     public int getDistance() {
         return distance;
     }
 
+    //Checks if a provided row and col is with in the matrix
     public static boolean isValid(GraphNode[][] matrix, int row, int col) {
         return row >= 0 && row < matrix.length && col >= 0 && col < matrix[0].length;
     }
 
+    //copies a provided matrix and the info about it
     public static GraphNode[][] copyMatrix(GraphNode[][] matrix) {
         GraphNode[][] newMatrix = new GraphNode[matrix.length][matrix[0].length];
         for (int i = 0; i < matrix.length; i++) {
@@ -150,15 +117,17 @@ public class GraphNode implements Comparable<GraphNode> {
         return newMatrix;
     }
 
+    //Prints the path of the node
     public static void printPath(GraphNode current) {
         String output = getStringPath(current);
         System.out.println(output);
     }
 
+    //gets string version of the path of the current node
     public static String getStringPath(GraphNode current) {
         String output = "";
         while (current.previous != null) {
-            output = "[" + current.getRow() + "," + current.getCol() + "] " + output;
+            output = "[" + current.getCol() + "," + current.getRow() + "] " + output;
             current = current.previous;
         }
         return output;
