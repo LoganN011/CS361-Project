@@ -73,7 +73,6 @@ public class AStar {
 
         // If no items are found, stop the search
         if (closestItem == null) {
-            System.out.println("No items left to find.");
             return;
         }
 
