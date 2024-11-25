@@ -1,88 +1,91 @@
-public class AStar {
+import java.util.ArrayList;
+import java.util.List;
+
+public class AStar{
 
     public static int[] rowMove = {1, -1, 0, 0};
     public static int[] colMove = {0, 0, 1, -1};
     public static String path = "";
     public static int totalDistance = 0;
+
+    // List of target nodes (nodes with items)
+    private static List<GraphNode> targetNodes = new ArrayList<>();
     private static GraphNode[][] original;
-    private static GraphNode goalNode;
 
     // Heuristic function: Manhattan distance
     public static int manhattanDistance(GraphNode current, GraphNode goal) {
         return Math.abs(current.getRow() - goal.getRow()) + Math.abs(current.getCol() - goal.getCol());
     }
 
-    // Initialize the graph nodes for A* (set distance to infinity initially)
+    // Initialize graph nodes for A*
     public static void initializeSingleSource(GraphNode[][] matrix, int startRow, int startCol) {
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
                 if (matrix[i][j] != null) {
-                    matrix[i][j].setDistance(Integer.MAX_VALUE);  // Set all distances to infinity initially
-                    matrix[i][j].setPrevious(null);  // No previous node at start
+                    matrix[i][j].setDistance(Integer.MAX_VALUE); // Infinity
+                    matrix[i][j].setPrevious(null);
                 }
             }
         }
-        matrix[startRow][startCol].setDistance(0);  // Set start node distance to 0
+        matrix[startRow][startCol].setDistance(0);
     }
 
-    // A* Algorithm implementation
-    public static void aStar(GraphNode[][] matrix, int startRow, int startCol, boolean isFirst) {
-        if (isFirst) {
-            path += "[" + matrix[startRow][startCol].getRow() + "," + matrix[startRow][startCol].getCol() + "] ";
-            original = GraphNode.copyMatrix(matrix);
-            goalNode = findGoalNode(matrix);  // Find the goal node (the node with an item)
-        }
+    // A* algorithm
+    public static void aStar(GraphNode[][] matrix, int startRow, int startCol) {
+        while (!targetNodes.isEmpty()) {
+            // Find the closest target
+            GraphNode goalNode = findClosestTarget(matrix[startRow][startCol]);
 
-        // Initialize all distances to infinity except the start node
-        initializeSingleSource(matrix, startRow, startCol);
+            // Initialize distances
+            initializeSingleSource(matrix, startRow, startCol);
 
-        // Create a priority queue to store nodes based on their f = g + h value
-        MinHeap<GraphNode> minHeap = new MinHeap<>();
+            // Priority queue for A*
+            MinHeap<GraphNode> minHeap = new MinHeap<>();
+            minHeap.insert(matrix[startRow][startCol]);
 
-        // Set the f value for the start node and add it to the priority queue
-        matrix[startRow][startCol].setDistance(manhattanDistance(matrix[startRow][startCol], goalNode));
-        minHeap.insert(matrix[startRow][startCol]);
+            while (!minHeap.isEmpty()) {
+                // Extract the node with the smallest f value
+                GraphNode current = minHeap.extractMin();
 
-        while (!minHeap.isEmpty()) {
-            // Get the node with the smallest f value
-            GraphNode current = minHeap.extractMin();
+                // If we reached the goal, reconstruct the path
+                if (current == goalNode) {
+                    path += reconstructPath(current);
+                    totalDistance += current.getDistance();
 
-            // If we have reached the goal, reconstruct the path
-            if (current == goalNode) {
-                path = reconstructPath(current);
-                totalDistance += current.getDistance();
-                return;
-            }
+                    // Remove item from original matrix and the target list
+                    original[goalNode.getRow()][goalNode.getCol()].removeItem();
+                    targetNodes.remove(goalNode);
 
-            // Explore neighbors
-            for (int k = 0; k < 4; k++) {
-                int row = current.getRow() + rowMove[k];
-                int col = current.getCol() + colMove[k];
+                    // Update start for next iteration
+                    startRow = goalNode.getRow();
+                    startCol = goalNode.getCol();
+                    break;
+                }
 
-                if (GraphNode.isValid(matrix, row, col) && matrix[row][col] != null) {
-                    GraphNode neighbor = matrix[row][col];
-                    int tentativeG = current.getDistance() + 1;  // g value (cost from start)
+                // Explore neighbors
+                for (int k = 0; k < 4; k++) {
+                    int row = current.getRow() + rowMove[k];
+                    int col = current.getCol() + colMove[k];
 
-                    // Calculate the heuristic (h value)
-                    int h = manhattanDistance(neighbor, goalNode);
+                    if (GraphNode.isValid(matrix, row, col) && matrix[row][col] != null) {
+                        GraphNode neighbor = matrix[row][col];
+                        int tentativeG = current.getDistance() + 1; // g value
+                        int h = manhattanDistance(neighbor, goalNode); // h value
+                        int f = tentativeG + h; // f = g + h
 
-                    // Calculate the total f value (f = g + h)
-                    int f = tentativeG + h;
-
-                    // If a shorter path to the neighbor is found
-                    if (tentativeG < neighbor.getDistance()) {
-                        neighbor.setDistance(tentativeG);
-                        neighbor.setPrevious(current);
-
-                        // Add the neighbor to the priority queue with the updated f value
-                        minHeap.insert(neighbor);
+                        // Update neighbor if shorter path is found
+                        if (tentativeG < neighbor.getDistance()) {
+                            neighbor.setDistance(tentativeG);
+                            neighbor.setPrevious(current);
+                            minHeap.insert(neighbor);
+                        }
                     }
                 }
             }
         }
     }
 
-    // Reconstruct the path by backtracking from the goal node
+    // Reconstruct path
     private static String reconstructPath(GraphNode goal) {
         StringBuilder result = new StringBuilder();
         GraphNode current = goal;
@@ -90,26 +93,50 @@ public class AStar {
             result.insert(0, "[" + current.getRow() + "," + current.getCol() + "] ");
             current = current.getPrevious();
         }
-        return result.toString().trim();
+        return result.toString().trim() + " ";
     }
 
-    public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst) {
-        totalDistance = 0;
-        path = "";
-        aStar(matrix, row, col, isFirst);
-        System.out.println("Path Taken:\n" + path);
-        System.out.println("Total Distance traveled: " + totalDistance);
+    // Find the closest target
+    private static GraphNode findClosestTarget(GraphNode start) {
+        GraphNode closest = null;
+        int minDistance = Integer.MAX_VALUE;
+
+        for (GraphNode target : targetNodes) {
+            int distance = manhattanDistance(start, target);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closest = target;
+            }
+        }
+
+        return closest;
     }
 
-    // Helper method to find the goal node (node with item)
-    private static GraphNode findGoalNode(GraphNode[][] matrix) {
+    // Prepare the list of target nodes
+    private static void prepareTargets(GraphNode[][] matrix) {
+        targetNodes.clear();
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
                 if (matrix[i][j] != null && matrix[i][j].hasItem()) {
-                    return matrix[i][j];
+                    targetNodes.add(matrix[i][j]);
                 }
             }
         }
-        return null;  // No goal node found
+    }
+
+    // Entry point
+    public static void printInfo(GraphNode[][] matrix, int row, int col) {
+        totalDistance = 0;
+        path = "";
+        original = GraphNode.copyMatrix(matrix);
+
+        // Prepare the list of target nodes
+        prepareTargets(matrix);
+
+        // Run A* for multiple targets
+        aStar(matrix, row, col);
+
+        System.out.println("Path Taken:\n" + path);
+        System.out.println("Total Distance traveled: " + totalDistance);
     }
 }

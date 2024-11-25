@@ -2,17 +2,14 @@ public class Queue<T> {
     //https://www.geeksforgeeks.org/queue-linked-list-implementation/
     private Node<T> front, rear;
 
-    //Makes a new queue setting everything to empty
     public Queue() {
         front = rear = null;
     }
 
-    //checks if the queue is empty
     public boolean isEmpty() {
         return front == null && rear == null;
     }
 
-    //Add something to the end of the queue
     public void enqueue(T newData) {
         Node<T> newNode = new Node(newData);
         if (rear == null) {
@@ -23,7 +20,6 @@ public class Queue<T> {
         }
     }
 
-    //Get the first thing in the queue
     public T dequeue() {
         if (isEmpty()) {
             System.out.println("Broken");
@@ -36,7 +32,21 @@ public class Queue<T> {
         return temp.data();
     }
 
-    // clears the queue making everything null
+    //Maybe make these last two return the node and not the data
+    public T front() {
+        if (isEmpty()) {
+            System.out.println("Broken");
+        }
+        return front.data();
+    }
+
+    public T rear() {
+        if (isEmpty()) {
+            System.out.println("Broken");
+        }
+        return rear.data();
+    }
+
     public void clear() {
         front = rear = null;
     }
