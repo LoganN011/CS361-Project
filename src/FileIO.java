@@ -71,19 +71,23 @@ public class FileIO {
         startTimer();
         BFS.printInfo(bfs, 0, 0, true);
         stopTimer();
+
         System.out.println("\nDFS: ");
         GraphNode[][] dfs = GraphNode.copyMatrix(matrix);
         startTimer();
         DFS.printInfo(dfs, 0, 0, 0, true);
         stopTimer();
-        GraphNode[][] bell = GraphNode.copyMatrix(matrix);
+
         System.out.println("\nBellman-Ford: ");
+        GraphNode[][] bell = GraphNode.copyMatrix(matrix);
         startTimer();
         BellmanFord.printInfo(bell, 0, 0, true);
         stopTimer();
+
         System.out.println("\nDijkstra: ");
+        GraphNode[][] dij = GraphNode.copyMatrix(matrix);
         startTimer();
-        Dijkstra.printInfo(bell, 0, 0, true);
+        Dijkstra.printInfo(dij, 0, 0, true);
         stopTimer();
 
     }

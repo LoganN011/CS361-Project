@@ -80,12 +80,12 @@ public class Dijkstra {
             // Relax neighbors
             for (int k = 0; k < 4; k++) {
                 // get row and col after move implemented
-                FileIO.addToNumberNodesVisited();
                 int row = current.getRow() + rowMove[k];
                 int col = current.getCol() + colMove[k];
 
                 // if the location of the move is within bounds and is not a barrier, set the node as a new node neighbor
                 if (GraphNode.isValid(matrix, row, col) && matrix[row][col] != null) {
+                    FileIO.addToNumberNodesVisited();
                     GraphNode newNode = matrix[row][col];
 
                     // relax distance for new node
