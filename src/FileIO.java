@@ -3,16 +3,20 @@ import java.util.Scanner;
 public class FileIO {
     public static long startTime = -1;
     public static long numberNodesVisited = 0;
+
+    // Method to build graph from file (if needed)
     public static GraphNode[][] buildGraph(String fileName) {
         Scanner sc = new Scanner(fileName);
         return getGraphNodes(sc);
     }
 
+    // Method to build graph from user input (console)
     public static GraphNode[][] buildGraph() {
         Scanner sc = new Scanner(System.in);
         return getGraphNodes(sc);
     }
 
+    // Helper method to process graph nodes from the scanner input
     private static GraphNode[][] getGraphNodes(Scanner sc) {
         int rows = sc.nextInt();
         int cols = sc.nextInt();
@@ -30,6 +34,7 @@ public class FileIO {
         return matrix;
     }
 
+    // Method to print the graph (matrix)
     public static void printGraph(GraphNode[][] matrix) {
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
@@ -45,7 +50,7 @@ public class FileIO {
         }
     }
 
-
+    // Timer methods for performance tracking
     public static void startTimer() {
         startTime = System.currentTimeMillis();
     }
@@ -56,39 +61,52 @@ public class FileIO {
 
     public static void stopTimer() {
         long endTime = System.currentTimeMillis();
-        System.out.println("TIME take: " + (endTime - startTime) + " ms");
+        System.out.println("TIME taken: " + (endTime - startTime) + " ms");
         System.out.println("Number of nodes visited: " + numberNodesVisited);
         startTime = -1;
         numberNodesVisited = 0;
     }
 
-
+    // Main method with all algorithms (BFS, DFS, Bellman-Ford, Dijkstra, A*)
     public static void main(String[] args) {
+        // Build the graph from input (e.g., user input or file)
         GraphNode[][] matrix = buildGraph();
         printGraph(matrix);
+
+        // Copy matrix for each algorithm to avoid mutating the original matrix
         GraphNode[][] bfs = GraphNode.copyMatrix(matrix);
         System.out.println("\nBFS: ");
         startTimer();
         BFS.printInfo(bfs, 0, 0, true);
         stopTimer();
 
-        System.out.println("\nDFS: ");
+        // For DFS
         GraphNode[][] dfs = GraphNode.copyMatrix(matrix);
+        System.out.println("\nDFS: ");
         startTimer();
         DFS.printInfo(dfs, 0, 0, 0, true);
         stopTimer();
 
-        System.out.println("\nBellman-Ford: ");
+        // For Bellman-Ford
         GraphNode[][] bell = GraphNode.copyMatrix(matrix);
+        System.out.println("\nBellman-Ford: ");
         startTimer();
         BellmanFord.printInfo(bell, 0, 0, true);
         stopTimer();
 
+        // For Dijkstra
+        GraphNode[][] dijkstra = GraphNode.copyMatrix(matrix);
         System.out.println("\nDijkstra: ");
-        GraphNode[][] dij = GraphNode.copyMatrix(matrix);
         startTimer();
-        Dijkstra.printInfo(dij, 0, 0, true);
+        Dijkstra.printInfo(dijkstra, 0, 0, true);
         stopTimer();
 
+        // A* algorithm for multiple targets
+        GraphNode[][] aStar = GraphNode.copyMatrix(matrix); // Copy of matrix for A*
+        System.out.println("\nA*:  ");
+        startTimer();
+        AStar.printInfo(aStar, 0 ,0 ,true);
+        stopTimer();
     }
+
 }

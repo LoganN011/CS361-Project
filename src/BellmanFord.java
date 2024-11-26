@@ -7,6 +7,7 @@ public class BellmanFord {
     private static GraphNode closestNode;
 
     public static void initializeSingleSource(GraphNode[][] matrix) {
+        //Sets all nodes distance to infinity
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
                 if (matrix[i][j] != null) {
@@ -17,6 +18,7 @@ public class BellmanFord {
     }
 
     public static void BellmanFord(GraphNode[][] matrix, int row, int col, boolean isFirst) {
+        //Save the original matrix
         if (isFirst) {
             matrix[row][col].removeItem();
             path += "[" + matrix[row][col].getRow() + "," + matrix[row][col].getCol() + "] ";
@@ -25,6 +27,7 @@ public class BellmanFord {
         }
         initializeSingleSource(matrix);
         matrix[row][col].setDistance(0);
+        //Loop through all nodes and relax all edges for each node
         for (int rows = 0; rows < matrix.length; rows++) {
             for (int cols = 0; cols < matrix[rows].length; cols++) {
                 for (int i = 0; i < matrix.length; i++) {
@@ -48,7 +51,7 @@ public class BellmanFord {
                 }
             }
         }
-
+        //once all is relaxed start again from the closets node saving the path and total distance traveled
         if (closestNode != null) {
             original[closestNode.getRow()][closestNode.getCol()].removeItem();
             path += GraphNode.getStringPath(closestNode);
@@ -62,6 +65,16 @@ public class BellmanFord {
 
     }
 
+    /**
+     * Prints the info of Bellman-ford
+     * Finds the path to all items in the provided matrix and prints that
+     * also tells the distance of the path
+     *
+     * @param matrix  graph that is being searched
+     * @param row     starting row
+     * @param col     starting col
+     * @param isFirst is this the first time bfs is being called on this graph
+     */
     public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst) {
         totalDistance = 0;
         BellmanFord(matrix, row, col, isFirst);
