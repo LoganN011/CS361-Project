@@ -47,6 +47,10 @@ public class GraphNode implements Comparable<GraphNode> {
         return seen == 1;
     }
 
+    public void setUnseen(){
+        seen = 0;
+    }
+
     public boolean isExplored() {
         return seen == 2;
     }

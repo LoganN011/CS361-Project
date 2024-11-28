@@ -157,6 +157,7 @@ public class Dijkstra {
 
             // reuse dijkstra to find the shortest path to the beginning
             while (!minHeap.isEmpty()) {
+                FileIO.addToNumberNodesVisited();
                 GraphNode current = minHeap.extractMin();
 
                 for (int k = 0; k < 4; k++) {
@@ -164,16 +165,16 @@ public class Dijkstra {
                     int col = current.getCol() + colMove[k];
 
                     if (GraphNode.isValid(matrix, row, col) && matrix[row][col] != null) {
-                        GraphNode neighbor = matrix[row][col];
+                        GraphNode newNode = matrix[row][col];
 
-                        if (neighbor.getDistance() > current.getDistance() + 1) {
-                            neighbor.setDistance(current.getDistance() + 1);
-                            neighbor.setPrevious(current);
-                            minHeap.insert(neighbor);
+                        if (newNode.getDistance() > current.getDistance() + 1) {
+                            newNode.setDistance(current.getDistance() + 1);
+                            newNode.setPrevious(current);
+                            minHeap.insert(newNode);
 
                             // check if we are at the starting node
                             if (row == 0 && col == 0) {
-                                startNode = neighbor;
+                                startNode = newNode;
                             }
                         }
                     }

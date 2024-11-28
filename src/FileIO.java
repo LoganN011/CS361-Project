@@ -74,10 +74,16 @@ public class FileIO {
         printGraph(matrix);
 
         // Copy matrix for each algorithm to avoid mutating the original matrix
-        GraphNode[][] bfs = GraphNode.copyMatrix(matrix);
+        GraphNode[][] bfsWithouRobot = GraphNode.copyMatrix(matrix);
         System.out.println("\nBFS: ");
         startTimer();
-        BFS.printInfo(bfs, 0, 0, true);
+        BFS.printInfo(bfsWithouRobot, 0, 0, true, false);
+        stopTimer();
+
+        GraphNode[][] bfsWithRobot = GraphNode.copyMatrix(matrix);
+        System.out.println("\nBFS: ");
+        startTimer();
+        BFS.printInfo(bfsWithRobot, 0, 0, true, true);
         stopTimer();
 
         // For DFS
