@@ -46,7 +46,7 @@ public class AStar {
      * @param startCol : start column position
      * @param isFirst : whether it's the first call to the algorithm (indicating start of pathfinding)
      */
-    public static void aStar(GraphNode[][] matrix, int startRow, int startCol, boolean isFirst) {
+    public static void aStar(GraphNode[][] matrix, int startRow, int startCol, boolean isFirst, boolean robot) {
         if (isFirst) {
             // Remove item from the start point if it's there
             matrix[startRow][startCol].removeItem();
@@ -129,7 +129,10 @@ public class AStar {
             startCol = closestItem.getCol();
 
             // Continue A* to find the next closest item
-            aStar(GraphNode.copyMatrix(original), startRow, startCol, false);
+            aStar(GraphNode.copyMatrix(original), startRow, startCol, false, robot);
+        }
+        if (robot) {
+            //do A* to 0,0 again
         }
     }
 
@@ -164,12 +167,12 @@ public class AStar {
      * @param col : starting column
      * @param isFirst : indicates if this is the first call to the algorithm
      */
-    public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst) {
+    public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst, boolean robot) {
         totalDistance = 0; // Reset the total distance
         path = ""; // Reset the path string
 
         // Run A* algorithm
-        aStar(matrix, row, col, isFirst);
+        aStar(matrix, row, col, isFirst, robot);
 
         // Output the path and total distance
         System.out.println("Path Taken:\n" + path);

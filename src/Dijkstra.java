@@ -47,7 +47,7 @@ public class Dijkstra {
     public static int totalDistance = 0;
     private static GraphNode[][] original;
     private static GraphNode closestItem;
-    private static boolean robot;
+    private static int originalRow = 0, originalCol = 0;
 
     /**
      * Initializes a matrix with HUGE wight vals
@@ -146,46 +146,52 @@ public class Dijkstra {
         }
         // if all items were found && robot is called to return to start...
         else if (robot) {
-            // reinitialize matrix and set current node distance to 0
-            initializeSingleSource(matrix);
-            matrix[startRow][startCol].setDistance(0);
-
-            // add initial node to heap
-            minHeap.insert(matrix[startRow][startCol]);
-
-            GraphNode startNode = null;
-
-            // reuse dijkstra to find the shortest path to the beginning
-            while (!minHeap.isEmpty()) {
-                FileIO.addToNumberNodesVisited();
-                GraphNode current = minHeap.extractMin();
-
-                for (int k = 0; k < 4; k++) {
-                    int row = current.getRow() + rowMove[k];
-                    int col = current.getCol() + colMove[k];
-
-                    if (GraphNode.isValid(matrix, row, col) && matrix[row][col] != null) {
-                        GraphNode newNode = matrix[row][col];
-
-                        if (newNode.getDistance() > current.getDistance() + 1) {
-                            newNode.setDistance(current.getDistance() + 1);
-                            newNode.setPrevious(current);
-                            minHeap.insert(newNode);
-
-                            // check if we are at the starting node
-                            if (row == 0 && col == 0) {
-                                startNode = newNode;
-                            }
-                        }
-                    }
-                }
+            if (originalRow == 0 && originalCol == 0) {
+                originalRow = -1;
+                originalCol = -1;
+                path += GraphNode.getStringPath(matrix[0][0]);
+                totalDistance += matrix[0][0].getDistance();
             }
-
-            // add robot trip to path
-            if (startNode != null) {
-                path += GraphNode.getStringPath(startNode);
-                totalDistance += startNode.getDistance();
-            }
+//            // reinitialize matrix and set current node distance to 0
+//            initializeSingleSource(matrix);
+//            matrix[startRow][startCol].setDistance(0);
+//
+//            // add initial node to heap
+//            minHeap.insert(matrix[startRow][startCol]);
+//
+//            GraphNode startNode = null;
+//
+//            // reuse dijkstra to find the shortest path to the beginning
+//            while (!minHeap.isEmpty()) {
+//                FileIO.addToNumberNodesVisited();
+//                GraphNode current = minHeap.extractMin();
+//
+//                for (int k = 0; k < 4; k++) {
+//                    int row = current.getRow() + rowMove[k];
+//                    int col = current.getCol() + colMove[k];
+//
+//                    if (GraphNode.isValid(matrix, row, col) && matrix[row][col] != null) {
+//                        GraphNode newNode = matrix[row][col];
+//
+//                        if (newNode.getDistance() > current.getDistance() + 1) {
+//                            newNode.setDistance(current.getDistance() + 1);
+//                            newNode.setPrevious(current);
+//                            minHeap.insert(newNode);
+//
+//                            // check if we are at the starting node
+//                            if (row == 0 && col == 0) {
+//                                startNode = newNode;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//
+//            // add robot trip to path
+//            if (startNode != null) {
+//                path += GraphNode.getStringPath(startNode);
+//                totalDistance += startNode.getDistance();
+//            }
         }
     }
 

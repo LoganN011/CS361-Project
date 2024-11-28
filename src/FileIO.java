@@ -96,7 +96,7 @@ public class FileIO {
         GraphNode[][] dfsWithRobot = GraphNode.copyMatrix(matrix);
         System.out.println("\nDFS with robot: ");
         startTimer();
-        DFS.printInfo(dfs, 0, 0, 0, true, true);
+        DFS.printInfo(dfsWithRobot, 0, 0, 0, true, true);
         stopTimer();
 
         // For Bellman-Ford
@@ -109,7 +109,7 @@ public class FileIO {
         GraphNode[][] bellWithRobot = GraphNode.copyMatrix(matrix);
         System.out.println("\nBellman-Ford With robot: ");
         startTimer();
-        BellmanFord.printInfo(bell, 0, 0, true, true);
+        BellmanFord.printInfo(bellWithRobot, 0, 0, true, true);
         stopTimer();
 
         // For Dijkstra
@@ -129,7 +129,13 @@ public class FileIO {
         GraphNode[][] aStar = GraphNode.copyMatrix(matrix); // Copy of matrix for A*
         System.out.println("\nA*:  ");
         startTimer();
-        AStar.printInfo(aStar, 0 ,0 ,true);
+        AStar.printInfo(aStar, 0, 0, true, false);
+        stopTimer();
+
+        GraphNode[][] aStarWithRobot = GraphNode.copyMatrix(matrix); // Copy of matrix for A*
+        System.out.println("\nA* with robot:  ");
+        startTimer();
+        AStar.printInfo(aStarWithRobot, 0, 0, true, true);
         stopTimer();
     }
 
