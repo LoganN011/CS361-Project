@@ -8,6 +8,24 @@
  *
  * 2) initialize the graph weights to inf except for current node is 0
  *
+ * 3) We will use a priority queue (min heap) to iterate through nodes by
+ *    distance; we will add the starting node first. We will also initialize the
+ *    closest item to null as it has not yet been discovered
+ *
+ * 4) We will then continuously go through the nodes in the heap, extracting
+ *    them by least distance until the queue is empty. Each node that is visited
+ *    and is valid (not null and within bounds) will have its distance relaxed
+ *    and added to the heap. We will go through the whole graph in order to find
+ *    the closest item node.
+ *
+ * 5) Once the queue is empty we check if there is a closest item and add the
+ *    path to that item to the total shortest path.
+ *
+ * 6) If there is no closest item found, this means all items have been
+ *    collected. At this point we check for a robot call. If robot is true, find
+ *    the shortest path using dijkstra again back to the begging. If no robot is
+ *    called, then the current path is the returned result.
+ *
  */
 
 public class Dijkstra {
@@ -29,6 +47,7 @@ public class Dijkstra {
     public static int totalDistance = 0;
     private static GraphNode[][] original;
     private static GraphNode closestItem;
+    private static boolean robot;
 
     /**
      * Initializes a matrix with HUGE wight vals
@@ -51,12 +70,13 @@ public class Dijkstra {
      * @param startCol : start col
      * @param isFirst : is this the first time we are calling the algorithm?
      */
-    public static void dijkstra(GraphNode[][] matrix, int startRow, int startCol, boolean isFirst) {
+    public static void dijkstra(GraphNode[][] matrix, int startRow,
+                                int startCol, boolean isFirst, boolean robot) {
         if (isFirst) {
             matrix[startRow][startCol].removeItem();
-            // add start to path
-            path += "[" + matrix[startRow][startCol].getRow() + "," + matrix[startRow][startCol].getCol() + "] ";
-            // copy the original matrix
+            // add start to path & copy original matrix to avoid update issues
+            path += "[" + matrix[startRow][startCol].getRow() + "," +
+                    matrix[startRow][startCol].getCol() + "] ";
             original = GraphNode.copyMatrix(matrix);
         }
 
@@ -64,28 +84,29 @@ public class Dijkstra {
         initializeSingleSource(matrix);
         matrix[startRow][startCol].setDistance(0);
 
-        // initialize min-heap / priority queue for weights
-        // insert
+        // initialize min-heap / priority queue for weights and add first node
         MinHeap<GraphNode> minHeap = new MinHeap<>();
         minHeap.insert(matrix[startRow][startCol]);
 
         // initialize closest item to null
         closestItem = null;
 
-        // while the head is not empty
+        // while the heap is NOT empty
         while (!minHeap.isEmpty()) {
-            // pop minimum weight node in heap
+            FileIO.addToNumberNodesVisited();
+            // extract min and set to current node
             GraphNode current = minHeap.extractMin();
 
-            // Relax neighbors
+            // here we will start relaxing the
             for (int k = 0; k < 4; k++) {
                 // get row and col after move implemented
-                FileIO.addToNumberNodesVisited();
                 int row = current.getRow() + rowMove[k];
                 int col = current.getCol() + colMove[k];
 
-                // if the location of the move is within bounds and is not a barrier, set the node as a new node neighbor
-                if (GraphNode.isValid(matrix, row, col) && matrix[row][col] != null) {
+                // if the location of the move is within bounds and is not a
+                // barrier, set the node as a new node neighbor
+                if (GraphNode.isValid(matrix, row, col) &&
+                        matrix[row][col] != null) {
                     GraphNode newNode = matrix[row][col];
 
                     // relax distance for new node
@@ -93,10 +114,12 @@ public class Dijkstra {
                         newNode.setDistance(current.getDistance() + 1);
                         newNode.setPrevious(current);
 
-                        // Check if the new node has an item and is closer than the current closestNode and update
+                        // Check if the new node has an item and is closer than
+                        // the current closestNode and update
                         if (closestItem == null && newNode.hasItem()) {
                             closestItem = newNode;
-                        } else if (closestItem != null && closestItem.getDistance() > newNode.getDistance() && newNode.hasItem()) {
+                        } else if (closestItem != null &&
+                                closestItem.getDistance() > newNode.getDistance() && newNode.hasItem()) {
                             closestItem = newNode;
                         }
 
@@ -106,7 +129,7 @@ public class Dijkstra {
             }
         }
 
-        // If a closestNode with an item was found
+        // if a closestNode with an item was found...
         if (closestItem != null) {
 
             // remove item from original to mark it is found
@@ -119,14 +142,56 @@ public class Dijkstra {
             // reset for next dijkstra call
             startRow = closestItem.getRow();
             startCol = closestItem.getCol();
-            dijkstra(GraphNode.copyMatrix(original), startRow, startCol, false);
+            dijkstra(GraphNode.copyMatrix(original), startRow, startCol, false, robot);
+        }
+        // if all items were found && robot is called to return to start...
+        else if (robot) {
+            // reinitialize matrix and set current node distance to 0
+            initializeSingleSource(matrix);
+            matrix[startRow][startCol].setDistance(0);
+
+            // add initial node to heap
+            minHeap.insert(matrix[startRow][startCol]);
+
+            GraphNode startNode = null;
+
+            // reuse dijkstra to find the shortest path to the beginning
+            while (!minHeap.isEmpty()) {
+                GraphNode current = minHeap.extractMin();
+
+                for (int k = 0; k < 4; k++) {
+                    int row = current.getRow() + rowMove[k];
+                    int col = current.getCol() + colMove[k];
+
+                    if (GraphNode.isValid(matrix, row, col) && matrix[row][col] != null) {
+                        GraphNode neighbor = matrix[row][col];
+
+                        if (neighbor.getDistance() > current.getDistance() + 1) {
+                            neighbor.setDistance(current.getDistance() + 1);
+                            neighbor.setPrevious(current);
+                            minHeap.insert(neighbor);
+
+                            // check if we are at the starting node
+                            if (row == 0 && col == 0) {
+                                startNode = neighbor;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // add robot trip to path
+            if (startNode != null) {
+                path += GraphNode.getStringPath(startNode);
+                totalDistance += startNode.getDistance();
+            }
         }
     }
 
-    public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst) {
+    public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst, boolean robot) {
         totalDistance = 0;
         path = "";
-        dijkstra(matrix, row, col, isFirst);
+        dijkstra(matrix, row, col, isFirst, robot);
         System.out.println("Path Taken:\n" + path);
         System.out.println("Total Distance traveled: " + totalDistance);
     }

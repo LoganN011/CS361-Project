@@ -108,6 +108,6 @@ public class GraphNode implements Comparable<GraphNode> {
 
     @Override
     public int compareTo(GraphNode other) {
-        return Integer.compare(this.f, other.f); // Compare by f value
+        return Integer.compare(this.distance, other.distance); // Compare by f value
     }
 }

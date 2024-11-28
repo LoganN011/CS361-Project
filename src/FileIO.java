@@ -95,10 +95,16 @@ public class FileIO {
         stopTimer();
 
         // For Dijkstra
-        GraphNode[][] dijkstra = GraphNode.copyMatrix(matrix);
-        System.out.println("\nDijkstra: ");
+        GraphNode[][] dijkstraWithoutRobot = GraphNode.copyMatrix(matrix);
+        System.out.println("\nDijkstra without Robot: ");
         startTimer();
-        Dijkstra.printInfo(dijkstra, 0, 0, true);
+        Dijkstra.printInfo(dijkstraWithoutRobot, 0, 0, true, false);
+        stopTimer();
+
+        GraphNode[][] dijkstraWithRobot = GraphNode.copyMatrix(matrix);
+        System.out.println("\nDijkstra with Robot: ");
+        startTimer();
+        Dijkstra.printInfo(dijkstraWithRobot, 0, 0, true, true);
         stopTimer();
 
         // A* algorithm for multiple targets
