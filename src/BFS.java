@@ -60,8 +60,8 @@ public class BFS {
         if(robot){
             queue.clear();
             // make all nodes unseen
-            clearSeen(matrix);
-            GraphNode endNode = matrix[row][col];
+            clearSeen(original);
+            GraphNode endNode = original[row][col];
             endNode.incrementSeen();
             endNode.setDistance(0);
             queue.enqueue(endNode);
