@@ -90,7 +90,13 @@ public class FileIO {
         GraphNode[][] dfs = GraphNode.copyMatrix(matrix);
         System.out.println("\nDFS: ");
         startTimer();
-        DFS.printInfo(dfs, 0, 0, 0, true);
+        DFS.printInfo(dfs, 0, 0, 0, true, false);
+        stopTimer();
+
+        GraphNode[][] dfsWithRobot = GraphNode.copyMatrix(matrix);
+        System.out.println("\nDFS with robot: ");
+        startTimer();
+        DFS.printInfo(dfs, 0, 0, 0, true, true);
         stopTimer();
 
         // For Bellman-Ford

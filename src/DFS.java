@@ -5,8 +5,9 @@ public class DFS {
     public static String path = "";
     public static int totalDistance = 0;
     private static GraphNode[][] original;
+    private static int startRow = 0, startCol = 0;
 
-    public static void dfs(GraphNode[][] matrix, int row, int col, int distance, boolean isFirst) {
+    public static void dfs(GraphNode[][] matrix, int row, int col, int distance, boolean isFirst, boolean robot) {
         //Each call to dfs is a new node visited
         FileIO.addToNumberNodesVisited();
         //The first call to dfs it copies the matrix
@@ -23,7 +24,7 @@ public class DFS {
             path += GraphNode.getStringPath(matrix[row][col]);
             original[row][col].removeItem();
             totalDistance += distance;
-            dfs(GraphNode.copyMatrix(original), row, col, 0, false);
+            dfs(GraphNode.copyMatrix(original), row, col, 0, false, robot);
         }
         matrix[row][col].incrementSeen();
         //For each of the adjacent nodes there is a new recursive call while increase the distance
@@ -32,10 +33,19 @@ public class DFS {
             if (GraphNode.isValid(matrix, row + rowMove[k], col + colMove[k]) && matrix[row + rowMove[k]][col + colMove[k]] != null) {
                 if (matrix[row + rowMove[k]][col + colMove[k]].isDiscovered()) {
                     matrix[row + rowMove[k]][col + colMove[k]].setPrevious(matrix[row][col]);
-                    dfs(matrix, row + rowMove[k], col + colMove[k], distance + 1, false);
+                    dfs(matrix, row + rowMove[k], col + colMove[k], distance + 1, false, robot);
                 }
             }
         }
+        if (robot) {
+            if (row == startRow && col == startCol) {
+                path += GraphNode.getStringPath(matrix[row][col]);
+                totalDistance += distance;
+                startRow = -1;
+                startCol = -1;
+            }
+        }
+
     }
 
     /**
@@ -48,8 +58,11 @@ public class DFS {
      * @param col     starting col
      * @param isFirst is this the first time bfs is being called on this graph
      */
-    public static void printInfo(GraphNode[][] matrix, int row, int col, int distance, boolean isFirst) {
-        dfs(matrix, row, col, distance, isFirst);
+    public static void printInfo(GraphNode[][] matrix, int row, int col, int distance, boolean isFirst, boolean robot) {
+        path = "";
+        totalDistance = 0;
+        original = null;
+        dfs(matrix, row, col, distance, isFirst, robot);
         System.out.println("Path Taken:\n" + path);
         System.out.println("Total Distance traveled: " + totalDistance);
     }
