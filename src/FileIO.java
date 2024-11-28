@@ -81,7 +81,7 @@ public class FileIO {
         stopTimer();
 
         GraphNode[][] bfsWithRobot = GraphNode.copyMatrix(matrix);
-        System.out.println("\nBFS: ");
+        System.out.println("\nBFS With robot: ");
         startTimer();
         BFS.printInfo(bfsWithRobot, 0, 0, true, true);
         stopTimer();
