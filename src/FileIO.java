@@ -103,7 +103,13 @@ public class FileIO {
         GraphNode[][] bell = GraphNode.copyMatrix(matrix);
         System.out.println("\nBellman-Ford: ");
         startTimer();
-        BellmanFord.printInfo(bell, 0, 0, true);
+        BellmanFord.printInfo(bell, 0, 0, true, false);
+        stopTimer();
+
+        GraphNode[][] bellWithRobot = GraphNode.copyMatrix(matrix);
+        System.out.println("\nBellman-Ford With robot: ");
+        startTimer();
+        BellmanFord.printInfo(bell, 0, 0, true, true);
         stopTimer();
 
         // For Dijkstra

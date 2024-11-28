@@ -5,6 +5,7 @@ public class BellmanFord {
     public static int totalDistance = 0;
     private static GraphNode[][] original;
     private static GraphNode closestNode;
+    private static int startRow = 0, startCol = 0;
 
     public static void initializeSingleSource(GraphNode[][] matrix) {
         //Sets all nodes distance to infinity
@@ -17,7 +18,7 @@ public class BellmanFord {
         }
     }
 
-    public static void BellmanFord(GraphNode[][] matrix, int row, int col, boolean isFirst) {
+    public static void BellmanFord(GraphNode[][] matrix, int row, int col, boolean isFirst, boolean robot) {
         //Save the original matrix
         if (isFirst) {
             matrix[row][col].removeItem();
@@ -59,7 +60,15 @@ public class BellmanFord {
             row = closestNode.getRow();
             col = closestNode.getCol();
             closestNode = null;
-            BellmanFord(GraphNode.copyMatrix(original), row, col, false);
+            BellmanFord(GraphNode.copyMatrix(original), row, col, false, robot);
+        }
+        if (robot) {
+            if (startRow == 0 && startCol == 0) {
+                startRow = -1;
+                startCol = -1;
+                path += GraphNode.getStringPath(matrix[0][0]);
+                totalDistance += matrix[0][0].getDistance();
+            }
         }
 
 
@@ -75,9 +84,12 @@ public class BellmanFord {
      * @param col     starting col
      * @param isFirst is this the first time bfs is being called on this graph
      */
-    public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst) {
+    public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst, boolean robot) {
         totalDistance = 0;
-        BellmanFord(matrix, row, col, isFirst);
+        path = "";
+        original = null;
+        closestNode = null;
+        BellmanFord(matrix, row, col, isFirst, robot);
         System.out.println("Path Taken:\n" + path);
         System.out.println("Total Distance traveled: " + totalDistance);
     }
