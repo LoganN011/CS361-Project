@@ -52,7 +52,7 @@ public class BFS {
             node.incrementSeen();
         }
         if(robot){
-            if (row == startRow && col == startCol) {
+            if (startRow == 0 && startCol == 0) {
                 path += GraphNode.getStringPath(matrix[row][col]);
                 totalDistance += matrix[row][col].getDistance();
                 startRow = -1;
