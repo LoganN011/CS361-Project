@@ -5,8 +5,16 @@ public class BFS {
     public static String path = "";
     public static int totalDistance = 0;
     private static GraphNode[][] original;
-    //private static int lastItemRow = -1, lastItemCol = -1;
-    private static int startRow = 0, startCol = 0;
+
+    public static void clearSeen(GraphNode[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j] != null) {
+                    matrix[i][j].setUnseen();
+                }
+            }
+        }
+    }
 
     public static void bfs(GraphNode[][] matrix, int row, int col, boolean isFirst, boolean robot) {
         //First run copies the matrix to be used in recursion
@@ -32,8 +40,6 @@ public class BFS {
                 //saving the path to get here and the distance as well
                 path += GraphNode.getStringPath(matrix[row][col]);
                 totalDistance += matrix[row][col].getDistance();
-//                lastItemRow = row;
-//                lastItemCol = col;
                 bfs(GraphNode.copyMatrix(original), row, col, false, robot);
             }
             //Looking in all 4 direction you could move from a node (up, down, left, and right)
@@ -52,53 +58,48 @@ public class BFS {
             node.incrementSeen();
         }
         if(robot){
-            if (row == startRow && col == startCol) {
-                path += GraphNode.getStringPath(matrix[row][col]);
-                totalDistance += matrix[row][col].getDistance();
-                startRow = -1;
-                startCol = -1;
+            queue.clear();
+            // make all nodes unseen
+            clearSeen(original);
+            GraphNode endNode = original[row][col];
+            endNode.incrementSeen();
+            endNode.setDistance(0);
+            queue.enqueue(endNode);
+            GraphNode startNode = null;
+
+            while (!queue.isEmpty()) {
+                //mark node as visited
+                FileIO.addToNumberNodesVisited();
+                GraphNode current = queue.dequeue();
+                row = current.getRow();
+                col = current.getCol();
+
+                for (int k = 0; k < 4; k++) {
+                    int newRow = row + rowMove[k];
+                    int newCol = col + colMove[k];
+                    if (GraphNode.isValid(matrix, newRow, newCol)) {
+                        GraphNode neighbor = matrix[newRow][newCol];
+                        if (neighbor != null && neighbor.isDiscovered()) {
+                            neighbor.incrementSeen();
+                            neighbor.setDistance(current.getDistance() + 1);
+                            neighbor.setPrevious(current);
+                            queue.enqueue(neighbor);
+
+                            if (newRow == 0 && newCol == 0) {
+                                startNode = neighbor;
+                            }
+                        }
+                    }
+                }
+
+                current.incrementSeen();
             }
-//            queue.clear();
-//            // make all nodes unseen
-//            GraphNode endNode = original[lastItemRow][lastItemCol];
-//            endNode.incrementSeen();
-//            endNode.setDistance(0);
-//            queue.enqueue(endNode);
-//            GraphNode startNode = null;
-//
-//            while (!queue.isEmpty()) {
-//                //mark node as visited
-//                FileIO.addToNumberNodesVisited();
-//                GraphNode current = queue.dequeue();
-//                row = current.getRow();
-//                col = current.getCol();
-//
-//                for (int k = 0; k < 4; k++) {
-//                    int newRow = row + rowMove[k];
-//                    int newCol = col + colMove[k];
-//                    if (GraphNode.isValid(original, newRow, newCol)) {
-//                        GraphNode neighbor = original[newRow][newCol];
-//                        if (neighbor != null && neighbor.isDiscovered()) {
-//                            neighbor.incrementSeen();
-//                            neighbor.setDistance(current.getDistance() + 1);
-//                            neighbor.setPrevious(current);
-//                            queue.enqueue(neighbor);
-//
-//                            if (newRow == 0 && newCol == 0) {
-//                                startNode = neighbor;
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                current.incrementSeen();
-//            }
-//
-//            // add robot trip to path
-//            if (startNode != null) {
-//                path += GraphNode.getStringPath(startNode);
-//                totalDistance += startNode.getDistance();
-//            }
+
+            // add robot trip to path
+            if (startNode != null) {
+                path += GraphNode.getStringPath(endNode);
+                totalDistance += startNode.getDistance();
+            }
 
         }
 
@@ -116,10 +117,6 @@ public class BFS {
      */
     public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst, boolean robot) {
         totalDistance = 0;
-        path = "";
-//        lastItemRow = -1;
-//        lastItemCol = -1;
-        original = null;
         bfs(matrix, row, col, isFirst, robot);
         System.out.println("Path Taken:\n" + path);
         System.out.println("Total Distance traveled: " + totalDistance);
