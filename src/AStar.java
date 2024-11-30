@@ -7,6 +7,7 @@ public class AStar {
     public static int totalDistance = 0;
     private static GraphNode[][] original;
     private static GraphNode closestItem;
+    private static boolean allItemsCollected = false; // Track if all items are collected
 
     /**
      * Initializes a matrix with HUGE weight values (infinity)
@@ -30,7 +31,6 @@ public class AStar {
      * @return the Manhattan distance (h value)
      */
     public static int manhattanDistance(GraphNode current, GraphNode goal) {
-        // Custom implementation of absolute value (no Math.abs)
         return absoluteDifference(current.getRow(), goal.getRow()) + absoluteDifference(current.getCol(), goal.getCol());
     }
 
@@ -45,6 +45,7 @@ public class AStar {
      * @param startRow : start row position
      * @param startCol : start column position
      * @param isFirst : whether it's the first call to the algorithm (indicating start of pathfinding)
+     * @param robot : whether it's the robot's turn to navigate
      */
     public static void aStar(GraphNode[][] matrix, int startRow, int startCol, boolean isFirst, boolean robot) {
         if (isFirst) {
@@ -73,6 +74,7 @@ public class AStar {
 
         // If no items are found, stop the search
         if (closestItem == null) {
+            allItemsCollected = true;
             return;
         }
 
@@ -131,11 +133,20 @@ public class AStar {
             // Continue A* to find the next closest item
             aStar(GraphNode.copyMatrix(original), startRow, startCol, false, robot);
         }
-        if (robot) {
-            //do A* to 0,0 again
+
+        // If the robot has collected all items, consider returning to the origin
+        if (robot && allItemsCollected) {
+            GraphNode origin = original[0][0];
+            aStar(GraphNode.copyMatrix(original), startRow, startCol, false, false);
+            path += "Return to Origin [" + origin.getRow() + "," + origin.getCol() + "]";
         }
     }
 
+    /**
+     * Finds the closest item to the current position of the robot
+     * @param matrix : grid matrix
+     * @return closest item (GraphNode) or null if no items found
+     */
     public static GraphNode findClosestItem(GraphNode[][] matrix) {
         GraphNode closestItem = null;
         int minDistance = Integer.MAX_VALUE;
@@ -145,8 +156,8 @@ public class AStar {
                 GraphNode node = matrix[row][col];
 
                 if (node != null && node.hasItem()) {
-                    // Calculate Manhattan distance from the starting point (assume it's (0, 0) for now)
-                    int distance = manhattanDistance(node, new GraphNode(0, 0, "Label", false)); // Update as needed
+                    // Calculate Manhattan distance from the starting point
+                    int distance = manhattanDistance(node, new GraphNode(0, 0, "Label", false));
 
                     if (distance < minDistance) {
                         minDistance = distance;
@@ -158,7 +169,6 @@ public class AStar {
 
         return closestItem; // Return null if no item is found
     }
-
 
     /**
      * Entry point to print the path and total distance for A*
@@ -179,3 +189,4 @@ public class AStar {
         System.out.println("Total Distance traveled: " + totalDistance);
     }
 }
+
