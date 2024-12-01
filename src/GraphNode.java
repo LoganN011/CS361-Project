@@ -87,6 +87,10 @@ public class GraphNode implements Comparable<GraphNode> {
         return row >= 0 && row < matrix.length && col >= 0 && col < matrix[0].length;
     }
 
+    public void addItem() {
+        hasItem = true;
+    }
+
     public static GraphNode[][] copyMatrix(GraphNode[][] matrix) {
         GraphNode[][] newMatrix = new GraphNode[matrix.length][matrix[0].length];
         for (int i = 0; i < matrix.length; i++) {

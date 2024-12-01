@@ -8,6 +8,7 @@ public class AStar {
     private static GraphNode[][] original;
     private static GraphNode closestItem;
     private static boolean allItemsCollected = false; // Track if all items are collected
+    private static boolean didRobot = false;
 
     /**
      * Initializes a matrix with HUGE weight values (infinity)
@@ -135,10 +136,11 @@ public class AStar {
         }
 
         // If the robot has collected all items, consider returning to the origin
-        if (robot && allItemsCollected) {
+        if (robot && allItemsCollected && !didRobot) {
             GraphNode origin = original[0][0];
+            origin.addItem();
+            didRobot = true;
             aStar(GraphNode.copyMatrix(original), startRow, startCol, false, false);
-            path += "Return to Origin [" + origin.getRow() + "," + origin.getCol() + "]";
         }
     }
 
