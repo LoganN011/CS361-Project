@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class FileIO {
@@ -68,75 +70,83 @@ public class FileIO {
     }
 
     // Main method with all algorithms (BFS, DFS, Bellman-Ford, Dijkstra, A*)
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         // Build the graph from input (e.g., user input or file)
-        GraphNode[][] matrix = buildGraph();
-        printGraph(matrix);
+        Scanner sc;
+        if (args.length == 0) {
+            sc = new Scanner(System.in);
+        } else {
+            sc = new Scanner(new File(args[0]));
+        }
+        while (sc.hasNext()) {
+            GraphNode[][] matrix = getGraphNodes(sc);
+            printGraph(matrix);
 
-        // Copy matrix for each algorithm to avoid mutating the original matrix
-        GraphNode[][] bfsWithouRobot = GraphNode.copyMatrix(matrix);
-        System.out.println("\nBFS: ");
-        startTimer();
-        BFS.printInfo(bfsWithouRobot, 0, 0, true, false);
-        stopTimer();
+            // Copy matrix for each algorithm to avoid mutating the original matrix
+            GraphNode[][] bfsWithouRobot = GraphNode.copyMatrix(matrix);
+            System.out.println("\nBFS: ");
+            startTimer();
+            BFS.printInfo(bfsWithouRobot, 0, 0, true, false);
+            stopTimer();
 
-        GraphNode[][] bfsWithRobot = GraphNode.copyMatrix(matrix);
-        System.out.println("\nBFS With robot: ");
-        startTimer();
-        BFS.printInfo(bfsWithRobot, 0, 0, true, true);
-        stopTimer();
+            GraphNode[][] bfsWithRobot = GraphNode.copyMatrix(matrix);
+            System.out.println("\nBFS With robot: ");
+            startTimer();
+            BFS.printInfo(bfsWithRobot, 0, 0, true, true);
+            stopTimer();
 
-        // For DFS
-        GraphNode[][] dfs = GraphNode.copyMatrix(matrix);
-        System.out.println("\nDFS: ");
-        startTimer();
-        DFS.printInfo(dfs, 0, 0, 0, true, false);
-        stopTimer();
+            // For DFS
+            GraphNode[][] dfs = GraphNode.copyMatrix(matrix);
+            System.out.println("\nDFS: ");
+            startTimer();
+            DFS.printInfo(dfs, 0, 0, 0, true, false);
+            stopTimer();
 
-        GraphNode[][] dfsWithRobot = GraphNode.copyMatrix(matrix);
-        System.out.println("\nDFS with robot: ");
-        startTimer();
-        DFS.printInfo(dfsWithRobot, 0, 0, 0, true, true);
-        stopTimer();
+            GraphNode[][] dfsWithRobot = GraphNode.copyMatrix(matrix);
+            System.out.println("\nDFS with robot: ");
+            startTimer();
+            DFS.printInfo(dfsWithRobot, 0, 0, 0, true, true);
+            stopTimer();
 
-        // For Bellman-Ford
-        GraphNode[][] bell = GraphNode.copyMatrix(matrix);
-        System.out.println("\nBellman-Ford: ");
-        startTimer();
-        BellmanFord.printInfo(bell, 0, 0, true, false);
-        stopTimer();
+            // For Bellman-Ford
+            GraphNode[][] bell = GraphNode.copyMatrix(matrix);
+            System.out.println("\nBellman-Ford: ");
+            startTimer();
+            BellmanFord.printInfo(bell, 0, 0, true, false);
+            stopTimer();
 
-        GraphNode[][] bellWithRobot = GraphNode.copyMatrix(matrix);
-        System.out.println("\nBellman-Ford With robot: ");
-        startTimer();
-        BellmanFord.printInfo(bellWithRobot, 0, 0, true, true);
-        stopTimer();
+            GraphNode[][] bellWithRobot = GraphNode.copyMatrix(matrix);
+            System.out.println("\nBellman-Ford With robot: ");
+            startTimer();
+            BellmanFord.printInfo(bellWithRobot, 0, 0, true, true);
+            stopTimer();
 
-        // For Dijkstra
-        GraphNode[][] dijkstraWithoutRobot = GraphNode.copyMatrix(matrix);
-        System.out.println("\nDijkstra without Robot: ");
-        startTimer();
-        Dijkstra.printInfo(dijkstraWithoutRobot, 0, 0, true, false);
-        stopTimer();
+            // For Dijkstra
+            GraphNode[][] dijkstraWithoutRobot = GraphNode.copyMatrix(matrix);
+            System.out.println("\nDijkstra without Robot: ");
+            startTimer();
+            Dijkstra.printInfo(dijkstraWithoutRobot, 0, 0, true, false);
+            stopTimer();
 
-        GraphNode[][] dijkstraWithRobot = GraphNode.copyMatrix(matrix);
-        System.out.println("\nDijkstra with Robot: ");
-        startTimer();
-        Dijkstra.printInfo(dijkstraWithRobot, 0, 0, true, true);
-        stopTimer();
+            GraphNode[][] dijkstraWithRobot = GraphNode.copyMatrix(matrix);
+            System.out.println("\nDijkstra with Robot: ");
+            startTimer();
+            Dijkstra.printInfo(dijkstraWithRobot, 0, 0, true, true);
+            stopTimer();
 
-        // A* algorithm for multiple targets
-        GraphNode[][] aStar = GraphNode.copyMatrix(matrix); // Copy of matrix for A*
-        System.out.println("\nA*:  ");
-        startTimer();
-        AStar.printInfo(aStar, 0, 0, true, false);
-        stopTimer();
+            // A* algorithm for multiple targets
+            GraphNode[][] aStar = GraphNode.copyMatrix(matrix); // Copy of matrix for A*
+            System.out.println("\nA*:  ");
+            startTimer();
+            AStar.printInfo(aStar, 0, 0, true, false);
+            stopTimer();
 
-        GraphNode[][] aStarWithRobot = GraphNode.copyMatrix(matrix); // Copy of matrix for A*
-        System.out.println("\nA* with robot:  ");
-        startTimer();
-        AStar.printInfo(aStarWithRobot, 0, 0, true, true);
-        stopTimer();
+            GraphNode[][] aStarWithRobot = GraphNode.copyMatrix(matrix); // Copy of matrix for A*
+            System.out.println("\nA* with robot:  ");
+            startTimer();
+            AStar.printInfo(aStarWithRobot, 0, 0, true, true);
+            stopTimer();
+        }
     }
 
 }
