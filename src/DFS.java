@@ -62,6 +62,8 @@ public class DFS {
         path = "";
         totalDistance = 0;
         original = null;
+        startRow = 0;
+        startCol = 0;
         dfs(matrix, row, col, distance, isFirst, robot);
         System.out.println("Path Taken:\n" + path);
         System.out.println("Total Distance traveled: " + totalDistance);

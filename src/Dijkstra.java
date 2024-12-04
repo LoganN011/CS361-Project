@@ -198,6 +198,8 @@ public class Dijkstra {
     public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst, boolean robot) {
         totalDistance = 0;
         path = "";
+        originalRow = 0;
+        originalCol = 0;
         dijkstra(matrix, row, col, isFirst, robot);
         System.out.println("Path Taken:\n" + path);
         System.out.println("Total Distance traveled: " + totalDistance);

@@ -89,6 +89,8 @@ public class BellmanFord {
         path = "";
         original = null;
         closestNode = null;
+        startRow = 0;
+        startCol = 0;
         BellmanFord(matrix, row, col, isFirst, robot);
         System.out.println("Path Taken:\n" + path);
         System.out.println("Total Distance traveled: " + totalDistance);

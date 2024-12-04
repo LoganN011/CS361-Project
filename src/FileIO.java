@@ -6,18 +6,6 @@ public class FileIO {
     public static long startTime = -1;
     public static long numberNodesVisited = 0;
 
-    // Method to build graph from file (if needed)
-    public static GraphNode[][] buildGraph(String fileName) {
-        Scanner sc = new Scanner(fileName);
-        return getGraphNodes(sc);
-    }
-
-    // Method to build graph from user input (console)
-    public static GraphNode[][] buildGraph() {
-        Scanner sc = new Scanner(System.in);
-        return getGraphNodes(sc);
-    }
-
     // Helper method to process graph nodes from the scanner input
     private static GraphNode[][] getGraphNodes(Scanner sc) {
         int rows = sc.nextInt();

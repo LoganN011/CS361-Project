@@ -117,6 +117,8 @@ public class BFS {
         totalDistance = 0;
         path = "";
         original = null;
+        startRow = 0;
+        startCol = 0;
         bfs(matrix, row, col, isFirst, robot);
         System.out.println("Path Taken:\n" + path);
         System.out.println("Total Distance traveled: " + totalDistance);

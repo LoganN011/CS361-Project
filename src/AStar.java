@@ -182,7 +182,8 @@ public class AStar {
     public static void printInfo(GraphNode[][] matrix, int row, int col, boolean isFirst, boolean robot) {
         totalDistance = 0; // Reset the total distance
         path = ""; // Reset the path string
-
+        allItemsCollected = false;
+        didRobot = false;
         // Run A* algorithm
         aStar(matrix, row, col, isFirst, robot);
 
